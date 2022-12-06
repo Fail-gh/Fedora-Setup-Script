@@ -2,6 +2,7 @@
 - [Introduction](#introduction)
 - [Fresh Install](#freshinstall)
 - [Coming from Windows](#comingfromwindows)
+- [Known Issue](#knownissue)
 
 ## Fedora install guide and semi-automated post install script: <a name="introduction"></a>
 
@@ -56,3 +57,7 @@ Guide:
    ./setup.sh
    ```
 1. Follow the instruction on screen
+
+## Known Issue<a name="knowissue"></a>
+
+1. Tpm cryptenroll randomly fail change $part with your disk root partiton path (Ex. /dev/sda3)
