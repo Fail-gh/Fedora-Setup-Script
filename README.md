@@ -31,8 +31,8 @@ Guide:
 
 1. Open or Select "Install to Hard Drive"
 1. Select Language, Keyboard Layout and Time & Date
-1. Go on "Installation Destination"
-1. Select the disk previously prepared
+1. Go to "Installation Destination"
+1. Select the previously prepared disk
 1. Check Custom and Done
 1. Check Encrypt my data (_**Raccomended**_)
 1. And then "Click here to create them automatically"
@@ -41,7 +41,7 @@ Guide:
 1. Click "Done" and insert the encryption passhphrase
 1. "Save Passhphrase", accept changes and begin installation (Bottom right corner)
 1. Click "Finish Installation" and Reboot
-1. Go in the BIOS/UEFI and set Fedora Disk as the first boot priority
+1. Enter BIOS/UEFI and set Fedora Disk as the first boot priority
 1. Start Setup _**without**_ enabling Third-Party Repositories
 1. Open terminal and write:
    ```
