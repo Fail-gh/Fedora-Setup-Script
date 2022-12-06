@@ -52,6 +52,7 @@ Guide:
 1. Download the [script](https://github.com/Fail-gh/Fedora-Setup-Script/releases/download/Release/setup.sh) and put in the home directory
 1. Open the console (ex terminal) and type:
    ```
+   sudo chmod +x setup.sh
    ./setup.sh
    ```
 1. Follow the instruction on screen
