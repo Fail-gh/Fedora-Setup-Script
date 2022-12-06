@@ -60,4 +60,4 @@ Guide:
 
 ## Known Issue<a name="knownissue"></a>
 
-1. Tpm cryptenroll randomly fail, change $part with your disk root partiton path (Ex. /dev/sda3)
+1. Cryptenroll randomly fail, change $part with your disk root partiton path (Ex. sda3)
