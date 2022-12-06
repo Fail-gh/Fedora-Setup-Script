@@ -2,7 +2,7 @@
 - [Introduction](#introduction)
 - [Fresh Install](#freshinstall)
 - [Coming from Windows](#comingfromwindows)
-- [Known Issue](#knownissue)
+- [Known Issues](#knownissues)
 
 ## Fedora install guide and semi-automated post install script: <a name="introduction"></a>
 
@@ -58,6 +58,6 @@ Guide:
    ```
 1. Follow the instruction on screen
 
-## Known Issue<a name="knownissue"></a>
+## Known Issues<a name="knownissues"></a>
 
 1. Cryptenroll randomly fail, change $part with your disk root partiton path (Ex. sda3)
