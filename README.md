@@ -58,6 +58,6 @@ Guide:
    ```
 1. Follow the instruction on screen
 
-## Known Issue<a name="knowissue"></a>
+## Known Issue<a name="knownissue"></a>
 
-1. Tpm cryptenroll randomly fail change $part with your disk root partiton path (Ex. /dev/sda3)
+1. Tpm cryptenroll randomly fail, change $part with your disk root partiton path (Ex. /dev/sda3)
