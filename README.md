@@ -50,5 +50,8 @@ Guide:
 1. When the terminal closes you will have a pure install of Fedora
 
 1. Download the [script](https://github.com/Fail-gh/Fedora-Setup-Script/blob/main/setup.sh) and put in the home directory
-1. Open the console (ex terminal) and type ./setup.sh
+1. Open the console (ex terminal) and type:
+   ```
+   ./setup.sh
+   ```
 1. Follow the instruction on screen
