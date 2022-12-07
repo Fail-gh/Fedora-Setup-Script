@@ -62,7 +62,8 @@ Guide:
 
 1. Cryptenroll for tpm decryption randomly fail, change $part with your disk root partiton path (Ex. sda3)
 
--  Or run the command manually changing $part with your disk root partiton path (Ex. sda3)
+-  Or run the command manually changing $part with your disk root partiton path (Ex. sda3):
+
    ```
    sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/$part
    ```
