@@ -67,3 +67,4 @@ Guide:
    ```
    sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/$part
    ```
+1. Error with multiple disk attacched
