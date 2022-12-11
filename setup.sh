@@ -1,14 +1,13 @@
 #!/bin/bash
-
 echo "Select CPU:"
 PS3="-> "
-select cpu in Intel AMD "Intel older than 5 gen (Ex. 4 gen)"; do
+select cpu in "Intel newer than 4 gen (Ex. <=5 gen)" AMD "Intel older than 5 gen (Ex. >=4 gen)"; do
 	case $cpu in
-	Intel)
+	"Intel newer than 4 gen (Ex. <=5 gen)")
 		break;;
     AMD)
 		break;;
-    "Intel older than 5 gen (Ex. 4 gen)")
+    "Intel older than 5 gen (Ex. >=4 gen)")
 		break;;
     *)
 		echo "Invalid option";;
@@ -27,18 +26,9 @@ select gpu in Nvidia Other; do
   esac
 done
 
-echo "Setup flathub?"
-select fh in Yes No; do
-	case $fh in
-	Yes)
-		flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-		break;;
-    No)
-		break;;
-    *)
-		echo "Invalid option";;
-  esac
-done
+sudo flatpak remote-delete flathub
+sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+sudo flatpak install flathub com.mattjakeman.ExtensionManager -y
 
 sudo dnf update -y
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
@@ -55,12 +45,12 @@ sudo dnf install timeshift -y
 sudo dnf remove fedora-bookmarks -y
 
 case $cpu in
-	Intel)
+	"Intel newer than 4 gen (Ex. <=5 gen)")
 		sudo dnf install intel-media-driver -y;;
 	AMD)
 		sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y
 		sudo dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld -y;;
-	"Intel older than 5 gen (Ex. 4 gen)")
+	"Intel older than 5 gen (Ex. >=4 gen)")
 		sudo dnf install libva-intel-driver -y;;
 esac
 
@@ -110,8 +100,7 @@ echo "Setup tpm decryption?"
 select tpmd in Yes No; do
 	case $tpmd in
 	Yes)
-		part=$(lsblk -ro name,type,mountpoints | grep part | grep -v / | cut -d' ' -f1)
-		sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/$part
+		sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/sda3
 		cript=$(sudo cat /etc/crypttab | cut -d' ' -f1,2)
 		sudo sh -c "echo $cript - tpm2-device=auto,discard > /etc/crypttab"
 		sudo grubby --args="rd.luks.options=tpm2-device=auto" --update-kernel=ALL
@@ -123,4 +112,36 @@ select tpmd in Yes No; do
 		echo "Invalid option";;
   esac
 done
-reboot
+
+echo "OEM Install?"
+select oem in Yes No; do
+	case $oem in
+	Yes)
+		sudo sh -c "echo '[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=RunMe
+Exec=/usr/share/runme.sh
+Terminal=true' >> /usr/share/applications/runme.desktop"
+		sudo chmod +x /usr/share/runme.sh
+		sudo userdel -f oem
+		break;;
+    No)
+		break;;
+    *)
+		echo "Invalid option";;
+  esac
+done
+
+echo "Reboot?"
+select reboot in Yes No; do
+	case $reboot in
+	Yes)
+		reboot
+		break;;
+    No)
+		break;;
+    *)
+		echo "Invalid option";;
+  esac
+done
