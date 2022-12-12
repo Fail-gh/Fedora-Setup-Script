@@ -20,6 +20,8 @@ echo "Reboot?"
 select reboot in Yes No; do
 	case $reboot in
 	Yes)
+		sudo rm /usr/share/runme.sh
+		sudo rm /usr/share/applications/runme.desktop
 		reboot
 		break;;
     No)
