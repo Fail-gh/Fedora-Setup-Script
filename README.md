@@ -61,3 +61,7 @@ Guide:
 ## Known Issues<a name="knownissues"></a>
 
 1. Error with multiple disk attacched
+2. User setup not working with gnome-console, use instead gnome-terminal
+   ```
+   sudo dnf install gnome-terminal -y
+   ```
