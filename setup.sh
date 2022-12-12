@@ -116,7 +116,8 @@ done
 echo "OEM Install?"
 select oem in Yes No; do
 	case $oem in
-	Yes)
+	Yes)	
+		sudo cp runme.sh /usr/share/
 		sudo sh -c "echo '[Desktop Entry]
 Type=Application
 Encoding=UTF-8
@@ -132,6 +133,15 @@ Terminal=true' >> /usr/share/applications/runme.desktop"
 		echo "Invalid option";;
   esac
 done
+
+if [ $oem = 1 ] && [ $tpmd = 2 ]
+then
+	sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/sda3
+	cript=$(sudo cat /etc/crypttab | cut -d' ' -f1,2)
+	sudo sh -c "echo $cript - tpm2-device=auto,discard > /etc/crypttab"
+	sudo grubby --args="rd.luks.options=tpm2-device=auto" --update-kernel=ALL
+	sudo dracut -f
+fi
 
 echo "Reboot?"
 select reboot in Yes No; do
