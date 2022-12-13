@@ -65,3 +65,4 @@ Guide:
    ```
    sudo dnf install gnome-terminal -y
    ```
+3. If your disk is a nvme replace sda3 with nvme0n1p3
