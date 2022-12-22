@@ -1,31 +1,7 @@
 #!/bin/bash
-echo "Select CPU:"
-PS3="-> "
-select cpu in "Intel newer than 4 gen (Ex. <=5 gen)" AMD "Intel older than 5 gen (Ex. >=4 gen)"; do
-	case $cpu in
-	"Intel newer than 4 gen (Ex. <=5 gen)")
-		break;;
-    AMD)
-		break;;
-    "Intel older than 5 gen (Ex. >=4 gen)")
-		break;;
-    *)
-		echo "Invalid option";;
-  esac
-done
-
-echo "Select GPU:"
-select gpu in Nvidia Other; do
-	case $gpu in
-	Nvidia)
-		break;;
-    Other)
-		break;;
-    *)
-		echo "Invalid option";;
-  esac
-done
-
+sudo awk '{sub("env_reset","   env_reset,pwfeedback",$2);print}' /etc/sudoers > sudo
+sudo cp sudo /etc/sudoers
+sudo rm /etc/yum.repos.d/_copr_phracek-PyCharm.repo /etc/yum.repos.d/google-chrome.repo /etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo /etc/yum.repos.d/rpmfusion-nonfree-steam.repo
 sudo flatpak remote-delete flathub
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install flathub com.mattjakeman.ExtensionManager -y
@@ -39,119 +15,69 @@ sudo dnf install rpmfusion-free-release-tainted -y
 sudo dnf install libdvdcss -y
 sudo dnf install rpmfusion-nonfree-release-tainted -y
 sudo dnf --repo=rpmfusion-nonfree-tainted install "*-firmware" -y
-sudo rm /etc/yum.repos.d/_copr_phracek-PyCharm.repo /etc/yum.repos.d/google-chrome.repo /etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo /etc/yum.repos.d/rpmfusion-nonfree-steam.repo
 sudo dnf install gnome-tweaks -y
 sudo dnf install timeshift -y
 sudo dnf remove fedora-bookmarks -y
+gsettings set org.gnome.shell.window-switcher current-workspace-only false
+gsettings set org.gnome.desktop.interface font-antialiasing rgba
+gsettings set org.gnome.desktop.wm.preferences button-layout appmenu:minimize,maximize,close
+gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']"
+sudo timeshift --btrfs
+sudo sed -i 's/"schedule_boot" : "false",/"schedule_boot" : "true",/g' /etc/timeshift/timeshift.json
+sudo sed -i 's/"count_boot" : "5",/"count_boot" : "2",/g' /etc/timeshift/timeshift.json
 
+sudo cp td.sh /usr/share/
+sudo chmod +x /usr/share/td.sh
+sudo cp oem.sh /usr/share/
+sudo chmod +x /usr/share/oem.sh
+
+cpu=$(cat /proc/cpuinfo | grep vendor | cut -d':' -f2 | cut -d' ' -f2 | grep -m1 "")
 case $cpu in
-	"Intel newer than 4 gen (Ex. <=5 gen)")
-		sudo dnf install intel-media-driver -y;;
-	AMD)
-		sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y
-		sudo dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld -y;;
-	"Intel older than 5 gen (Ex. >=4 gen)")
-		sudo dnf install libva-intel-driver -y;;
+	GenuineIntel)
+                family=$(cat /proc/cpuinfo | grep family | cut -d':' -f2 | cut -d' ' -f2 | grep -m1 "")
+                if [ $family -gt 4 ];
+                then
+                    	sudo dnf install intel-media-driver -y
+                else
+                    	sudo dnf install libva-intel-driver -y
+                fi;;
+        AuthenticAMD)
+                sudo dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y
+                sudo dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld -y;;
 esac
 
-case $gpu in
-	Nvidia)
-		gnome-software --search="NVIDIA Linux Graphics Driver" &
-		echo "Store opened, install nvidia driver"
-		echo "Nvidia driver are installed?"
-		select nvidia in Yes No; do
-		case $nvidia in
-			Yes)
-				gnome-software --quit
-				sudo dnf install nvidia-vaapi-driver -y
-				break;;
-    		No)
-				echo "Install them and continue";;
-    		*)
-				echo "Invalid option";;
-  		esac
-		done
-		nsb=1;;
-	Other)
-		nsb=0;;
-	*)
-		echo "invalid option";;
-esac
-
-if [ $nsb != "0" ]
+nvidia=$(lspci | grep NVIDIA)
+if [ -z "$nvidia" ]
 then
-	echo "Secure boot with Nvidia? "
-	select sb in "Yes" "No"; do
-		case $sb in
-		"Yes")
-			sudo /usr/sbin/kmodgenca -a
-			echo "Insert user password"
-			sudo mokutil --import /etc/pki/akmods/certs/public_key.der
-			break;;
-		"No")
-			break;;
-		*)
-			echo "Invalid option";;
-  	esac
-	done
+	gpu=0
+else 
+	sudo dnf install akmod-nvidia xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-power vulkan xorg-x11-drv-nvidia-cuda-libs vdpauinfo libva-vdpau-driver libva-utils -y
+	gpu=1
 fi
 
-echo "Setup tpm decryption?"
-select tpmd in Yes No; do
-	case $tpmd in
-	Yes)
-		sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/sda3
-		cript=$(sudo cat /etc/crypttab | cut -d' ' -f1,2)
-		sudo sh -c "echo $cript - tpm2-device=auto,discard > /etc/crypttab"
-		sudo grubby --args="rd.luks.options=tpm2-device=auto" --update-kernel=ALL
-		sudo dracut -f
-		break;;
-    No)
-		break;;
-    *)
-		echo "Invalid option";;
-  esac
-done
-
-echo "OEM Install?"
-select oem in Yes No; do
-	case $oem in
-	Yes)	
-		sudo cp runme.sh /usr/share/
+if [ $gpu == "1" ]
+then
+	sb=$(mokutil --sb-state | cut -d' ' -f2)
+	if [ $sb == "enabled" ]
+	then
+		sudo cp nsb.sh /usr/share/
 		sudo sh -c "echo '[Desktop Entry]
+Name=NvidiaSecureBoot
+GenericName=Setup NVIDIA for secure boot
+Exec=/usr/share/nsb.sh
+Terminal=true
 Type=Application
-Encoding=UTF-8
-Name=RunMe
-Exec=/usr/share/runme.sh
-Terminal=true' >> /usr/share/applications/runme.desktop"
-		sudo chmod +x /usr/share/runme.sh
-		sudo userdel -f oem
-		break;;
-    No)
-		break;;
-    *)
-		echo "Invalid option";;
-  esac
-done
-
-if [ $oem = 1 ] && [ $tpmd = 2 ]
-then
-	sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/sda3
-	cript=$(sudo cat /etc/crypttab | cut -d' ' -f1,2)
-	sudo sh -c "echo $cript - tpm2-device=auto,discard > /etc/crypttab"
-	sudo grubby --args="rd.luks.options=tpm2-device=auto" --update-kernel=ALL
-	sudo dracut -f
+X-GNOME-Autostart-enabled=true' > /etc/xdg/autostart/nsb.desktop"
+		sudo chmod +x /usr/share/nsb.sh
+		reboot
+	fi
 fi
 
-echo "Reboot?"
-select reboot in Yes No; do
-	case $reboot in
-	Yes)
-		reboot
-		break;;
-    No)
-		break;;
-    *)
-		echo "Invalid option";;
-  esac
-done
+sudo sh -c "echo '[Desktop Entry]
+Name=TPMDecryption
+GenericName=Setup tpm decryption
+Exec=/usr/share/td.sh
+Terminal=true
+Type=Application
+X-GNOME-Autostart-enabled=true' > /etc/xdg/autostart/td.desktop"
+reboot
