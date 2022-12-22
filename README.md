@@ -60,9 +60,7 @@ Guide:
 
 ## Known Issues<a name="knownissues"></a>
 
-1. Error with multiple disk attacched
-2. User setup not working with gnome-console, use instead gnome-terminal
+1. Gnome-console doesn't work for now, api is not fully developed
    ```
    sudo dnf install gnome-terminal -y
    ```
-3. If your disk is a nvme replace sda3 with nvme0n1p3
