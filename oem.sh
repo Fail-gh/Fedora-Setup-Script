@@ -33,7 +33,7 @@ else
 				do
 					part=$(sed -n ''$n'p' crypted)
 					((n++))
-					sudo systemd-cryptenroll /dev/$part --wipe-slot=tpm2 --tpm2-device=auto --tpm2-pcrs=0+7
+					sudo systemd-cryptenroll /dev/$part --wipe-slot=tpm2 --tpm2-device=auto --tpm2-pcrs=4+7
 				done
 				sudo rm crypted
 				break;;
