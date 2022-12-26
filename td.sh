@@ -16,7 +16,7 @@ else
 				do
 					part=$(sed -n ''$n'p' crypted)
 					((n++))
-					sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+7 /dev/$part
+					sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=4+7 /dev/$part
 				done
 				sudo awk '{sub("none","-",$3);print}' /etc/crypttab > crypttab && sudo awk '{sub("discard","tpm2-device=auto,discard",$4);print}' crypttab > crypttab2
 				sudo cp crypttab2 /etc/crypttab
