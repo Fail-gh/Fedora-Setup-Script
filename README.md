@@ -44,14 +44,9 @@ Guide:
 1. Click "Finish Installation" and Reboot
 1. Enter BIOS/UEFI and set Fedora Disk as the first boot priority
 1. Start Setup _**without**_ enabling Third-Party Repositories
-1. Open terminal and clone the repo
+1. Open terminal and paste this command
    ```
-   git clone https://github.com/Fail-gh/Fedora-Setup-Script.git && cd Fedora-Setup-Script
-   ```
-1. Than type:
-   ```
-   sudo chmod +x setup.sh
-   ./setup.sh
+   git clone https://github.com/Fail-gh/Fedora-Setup-Script.git && cd Fedora-Setup-Script && sudo chmod +x setup.sh && ./setup.sh
    ```
 1. Follow the instruction on screen
 
