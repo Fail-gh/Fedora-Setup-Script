@@ -54,7 +54,7 @@ Guide:
    ```
    git clone https://github.com/Fail-gh/Fedora-Setup-Script.git && cd Fedora-Setup-Script
    ```
-1. Open the console (ex terminal) and type:
+1. Than type:
    ```
    sudo chmod +x setup.sh
    ./setup.sh
