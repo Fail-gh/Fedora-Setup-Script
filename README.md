@@ -44,13 +44,7 @@ Guide:
 1. Click "Finish Installation" and Reboot
 1. Enter BIOS/UEFI and set Fedora Disk as the first boot priority
 1. Start Setup _**without**_ enabling Third-Party Repositories
-1. Open terminal and write:
-   ```
-   sudo dnf install gnome-console -y && sudo dnf remove gnome-terminal -y && exit
-   ```
-1. When the terminal closes you will have a pure install of Fedora
-
-1. Clone the repo
+1. Open terminal and clone the repo
    ```
    git clone https://github.com/Fail-gh/Fedora-Setup-Script.git && cd Fedora-Setup-Script
    ```
