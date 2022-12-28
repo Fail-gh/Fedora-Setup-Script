@@ -3,6 +3,7 @@ gsettings set org.gnome.shell.window-switcher current-workspace-only false
 gsettings set org.gnome.desktop.interface font-antialiasing rgba
 gsettings set org.gnome.desktop.wm.preferences button-layout appmenu:minimize,maximize,close
 gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']"
+gsettings set org.gnome.software packaging-format-preference "['RPM', 'flatpak']"
 
 lsblk -ro name,type,fsroots | grep -v disk | grep -v NAME | grep -v / | cut -d' ' -f1 | grep -m3 "" > crypted
 max=$(wc -l crypted | cut -d' ' -f1)
