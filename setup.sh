@@ -22,6 +22,7 @@ gsettings set org.gnome.shell.window-switcher current-workspace-only false
 gsettings set org.gnome.desktop.interface font-antialiasing rgba
 gsettings set org.gnome.desktop.wm.preferences button-layout appmenu:minimize,maximize,close
 gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']"
+gsettings set org.gnome.software packaging-format-preference "['RPM', 'flatpak']"
 sudo timeshift --btrfs
 sudo sed -i 's/"schedule_boot" : "false",/"schedule_boot" : "true",/g' /etc/timeshift/timeshift.json
 sudo sed -i 's/"count_boot" : "5",/"count_boot" : "2",/g' /etc/timeshift/timeshift.json
