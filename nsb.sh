@@ -1,6 +1,7 @@
 #!/bin/bash
 echo "Insert your password when asks for passwords"
-sudo mokutil --import /etc/pki/akmods/certs/public_key.der
+sudo mokutil --timeout -1
+sudo mokutil --import --timeout -1 /etc/pki/akmods/certs/public_key.der
 sudo sh -c "echo '[Desktop Entry]
 Name=TPMDecryption
 GenericName=Setup tpm decryption
