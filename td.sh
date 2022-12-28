@@ -1,11 +1,17 @@
 #!/bin/bash
+sudo mokutil --timeout 10
 tpm=$(systemd-cryptenroll --tpm2-device=list | grep tpm)
+oem=$(whoami)
 if [ -z "$tpm" ]
 then
 	echo "No TPM available, Skipping..."
-else 
-	PS3="-> "	
-	echo "Enable tpm decryption? (Auto unlock of disk/s at boot, but is less secure(mandatory for OEM))"
+else
+if [ $oem == "oem" ]
+then
+	tpmd=1
+fi
+	PS3="-> "
+	echo "Enable tpm decryption? (Auto unlock of disk/s at boot, but is less secure)"
 	select tpmd in Yes No; do
 		case $tpmd in
 			Yes)
@@ -35,7 +41,6 @@ else
 	done
 fi
 
-oem=$(whoami)
 if [ $oem == "oem" ]
 then
 	sudo sh -c "echo '[Desktop Entry]
