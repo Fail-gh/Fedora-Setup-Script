@@ -52,7 +52,7 @@ if [ -z "$nvidia" ]
 then
 	gpu=0
 else 
-	sudo dnf install akmod-nvidia xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-power vulkan xorg-x11-drv-nvidia-cuda-libs vdpauinfo libva-vdpau-driver libva-utils -y
+	sudo dnf install nvidia-vaapi-driver akmod-nvidia xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-power vulkan xorg-x11-drv-nvidia-cuda-libs vdpauinfo libva-vdpau-driver libva-utils -y
 	gpu=1
 fi
 
