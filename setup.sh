@@ -72,13 +72,13 @@ X-GNOME-Autostart-enabled=true' > /etc/xdg/autostart/nsb.desktop"
 		sudo chmod +x /usr/share/nsb.sh
 		reboot
 	fi
-fi
-
-sudo sh -c "echo '[Desktop Entry]
+else
+        sudo sh -c "echo '[Desktop Entry]
 Name=TPMDecryption
 GenericName=Setup tpm decryption
 Exec=/usr/share/td.sh
 Terminal=true
 Type=Application
 X-GNOME-Autostart-enabled=true' > /etc/xdg/autostart/td.desktop"
-reboot
+        reboot
+fi
