@@ -16,6 +16,7 @@ sudo dnf install rpmfusion-nonfree-release-tainted -y
 sudo dnf --repo=rpmfusion-nonfree-tainted install "*-firmware" -y
 sudo dnf update -y
 sudo dnf install gnome-tweaks -y
+sudo dnf install menulibre -y
 sudo dnf install timeshift -y
 sudo dnf remove fedora-bookmarks -y
 gsettings set org.gnome.shell.window-switcher current-workspace-only false
