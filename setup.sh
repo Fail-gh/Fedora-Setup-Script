@@ -6,7 +6,6 @@ sudo flatpak remote-delete flathub
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install flathub com.mattjakeman.ExtensionManager -y
 
-sudo dnf update -y
 sudo dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 sudo dnf groupupdate core -y
 sudo dnf groupupdate multimedia --setop="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
@@ -15,6 +14,7 @@ sudo dnf install rpmfusion-free-release-tainted -y
 sudo dnf install libdvdcss -y
 sudo dnf install rpmfusion-nonfree-release-tainted -y
 sudo dnf --repo=rpmfusion-nonfree-tainted install "*-firmware" -y
+sudo dnf update -y
 sudo dnf install gnome-tweaks -y
 sudo dnf install timeshift -y
 sudo dnf remove fedora-bookmarks -y
