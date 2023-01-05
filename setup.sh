@@ -1,7 +1,7 @@
 #!/bin/bash
 sudo awk '{sub("env_reset","   env_reset,pwfeedback",$2);print}' /etc/sudoers > sudo
 sudo cp sudo /etc/sudoers
-sudo rm /etc/yum.repos.d/_copr_phracek-PyCharm.repo /etc/yum.repos.d/google-chrome.repo /etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo /etc/yum.repos.d/rpmfusion-nonfree-steam.repo
+sudo rm /etc/yum.repos.d/_copr_phracek-PyCharm.repo /etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo /etc/yum.repos.d/rpmfusion-nonfree-steam.repo
 sudo flatpak remote-delete flathub
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 sudo flatpak install flathub com.mattjakeman.ExtensionManager -y
