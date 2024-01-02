@@ -9,8 +9,8 @@ rm sudo
 rm /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:phracek:PyCharm.repo /etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo /etc/yum.repos.d/rpmfusion-nonfree-steam.repo
 
 #Create autostart folder as user
-mkdir /home/$USERNAME/.config/autostart/
-chown $USERNAME:$USERNAME /home/$USERNAME/.config/autostart/
+mkdir /home/$SUDO_USER/.config/autostart/
+chown $SUDO_USER:$SUDO_USER /home/$SUDO_USER/.config/autostart/
 
 #Update system
 dnf clean all
@@ -25,6 +25,6 @@ Name=Fedora Setup Upgraded
 Exec=/usr/fedora-setup-upgraded.sh
 Terminal=true
 Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$USERNAME/.config/autostart/fedora-setup-upgraded.desktop
+X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/fedora-setup-upgraded.desktop
 		chmod +x /usr/fedora-setup-upgraded.sh
 reboot

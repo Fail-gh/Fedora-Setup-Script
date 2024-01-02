@@ -64,7 +64,7 @@ cp user_configuration.sh /usr
 chmod +x /usr/user_configuration.sh
 
 rm /usr/fedora-setup-upgraded.sh
-rm /home/$USERNAME/.config/autostart/fedora-setup-upgraded.desktop
+rm /home/$SUDO_USER/.config/autostart/fedora-setup-upgraded.desktop
 
 #Check Secure Boot state and select next part of the script
 if [ -n "$nvidia" ]
@@ -78,7 +78,7 @@ Name=Nvidia Secure Boot
 Exec=/usr/nvidia_secure_boot.sh
 Terminal=true
 Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$USERNAME/.config/autostart/nvidia_secure_boot.desktop
+X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/nvidia_secure_boot.desktop
 		chmod +x /usr/nvidia_secure_boot.sh
 		reboot=$(systemd-inhibit | grep akmods)
 		echo "Installing NVIDIA kernel modules"
@@ -94,6 +94,6 @@ Name=User Configuration
 Exec=/usr/user_configuration.sh
 Terminal=true
 Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$USERNAME/.config/autostart/user_configuration.desktop
+X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/user_configuration.desktop
 	reboot
 fi

@@ -62,6 +62,6 @@ else
 fi
 
 sudo mokutil --timeout 10
-sudo rm /home/$USERNAME/.config/autostart/user_configuration.desktop
+sudo rm /home/$LOGNAME/.config/autostart/user_configuration.desktop
 sudo rm /usr/user_configuration.sh
 reboot

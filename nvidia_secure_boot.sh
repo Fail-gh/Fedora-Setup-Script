@@ -14,10 +14,10 @@ Name=User Configuration
 Exec=/usr/user_configuration.sh
 Terminal=true
 Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$USERNAME/.config/autostart/user_configuration.desktop
+X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/user_configuration.desktop
 
 #Remove old part of the script
-rm /home/$USERNAME/.config/autostart/nvidia_secure_boot.desktop
+rm /home/$SUDO_USER/.config/autostart/nvidia_secure_boot.desktop
 
 rm /usr/nvidia_secure_boot.sh
 reboot
