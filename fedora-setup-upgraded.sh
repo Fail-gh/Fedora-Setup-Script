@@ -28,8 +28,7 @@ dnf install "*-firmware" -y
 dnf install btrfs-assistant -y
 
 #Execute btrfs_maintenance_configuration
-chmod +x btrfs_maintenance_configuration.sh
-./btrfs_maintenance_configuration.sh
+/usr/btrfs_maintenance_configuration.sh
 
 #Install mesa Hardware Accelerated Codec
 dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y
@@ -59,11 +58,6 @@ then
 	grubby --update-kernel=ALL --args='nvidia-drm.modeset=1'
 fi
 
-#Copy next part of the script in /usr
-cp user_configuration.sh /usr
-chmod +x /usr/user_configuration.sh
-
-rm /usr/fedora-setup-upgraded.sh
 rm /home/$SUDO_USER/.config/autostart/fedora-setup-upgraded.desktop
 
 #Check Secure Boot state and select next part of the script
@@ -72,14 +66,12 @@ then
 	secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
 	if [ $secure_boot == "enabled" ]
 	then
-		cp nvidia_secure_boot.sh /usr
 		echo "[Desktop Entry]
 Name=Nvidia Secure Boot
-Exec=/usr/nvidia_secure_boot.sh
+Exec=/usr/nvidia-secure-boot.sh
 Terminal=true
 Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/nvidia_secure_boot.desktop
-		chmod +x /usr/nvidia_secure_boot.sh
+X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/nvidia-secure-boot.desktop
 		reboot=$(systemd-inhibit | grep akmods)
 		echo "Installing NVIDIA kernel modules"
 		while [ -n "$reboot" ]
@@ -91,9 +83,9 @@ X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/nvidia_secu
 else
 	echo "[Desktop Entry]
 Name=User Configuration
-Exec=/usr/user_configuration.sh
+Exec=/usr/user-configuration.sh
 Terminal=true
 Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/user_configuration.desktop
+X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/user-configuration.desktop
 	reboot
 fi

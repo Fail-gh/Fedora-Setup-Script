@@ -11,13 +11,11 @@ mokutil --import /etc/pki/akmods/certs/public_key.der
 #Create autostart for next part of the script
 echo "[Desktop Entry]
 Name=User Configuration
-Exec=/usr/user_configuration.sh
+Exec=/usr/user-configuration.sh
 Terminal=true
 Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/user_configuration.desktop
+X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/user-configuration.desktop
 
 #Remove old part of the script
-rm /home/$SUDO_USER/.config/autostart/nvidia_secure_boot.desktop
-
-rm /usr/nvidia_secure_boot.sh
+rm /home/$SUDO_USER/.config/autostart/nvidia-secure-boot.desktop
 reboot

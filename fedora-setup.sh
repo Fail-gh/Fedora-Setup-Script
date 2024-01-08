@@ -12,6 +12,17 @@ rm /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:phracek:PyCharm.repo /etc/yu
 mkdir /home/$SUDO_USER/.config/autostart/
 chown $SUDO_USER:$SUDO_USER /home/$SUDO_USER/.config/autostart/
 
+#Copy script to /usr
+cp fedora-setup-upgraded.sh /usr
+cp btrfs-maintenance-configuration.sh /usr
+cp nvidia-secure_boot.sh /usr
+cp user-configuration.sh /usr
+
+chmod +x /usr/fedora-setup-upgraded.sh
+chmod +x /usr/btrfs-maintenance-configuration.sh
+chmod +x /usr/nvidia-secure_boot.sh
+chmod +x /usr/user-configuration.sh
+
 #Update system
 dnf clean all
 dnf check-update
@@ -19,12 +30,10 @@ while [[ $? = 100 || $? = 1 || $? = 3 || $? =  200 ]]
 do
     dnf upgrade -y
 done
-cp fedora-setup-upgraded.sh /usr
 		echo "[Desktop Entry]
 Name=Fedora Setup Upgraded
 Exec=/usr/fedora-setup-upgraded.sh
 Terminal=true
 Type=Application
 X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/fedora-setup-upgraded.desktop
-		chmod +x /usr/fedora-setup-upgraded.sh
 reboot
