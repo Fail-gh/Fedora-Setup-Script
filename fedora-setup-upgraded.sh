@@ -28,7 +28,7 @@ dnf install "*-firmware" -y
 dnf install btrfs-assistant -y
 
 #Execute btrfs_maintenance_configuration
-/usr/btrfs_maintenance_configuration.sh
+/usr/btrfs-maintenance-configuration.sh
 
 #Install mesa Hardware Accelerated Codec
 dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y

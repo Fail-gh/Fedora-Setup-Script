@@ -15,12 +15,12 @@ chown $SUDO_USER:$SUDO_USER /home/$SUDO_USER/.config/autostart/
 #Copy script to /usr
 cp fedora-setup-upgraded.sh /usr
 cp btrfs-maintenance-configuration.sh /usr
-cp nvidia-secure_boot.sh /usr
+cp nvidia-secure-boot.sh /usr
 cp user-configuration.sh /usr
 
 chmod +x /usr/fedora-setup-upgraded.sh
 chmod +x /usr/btrfs-maintenance-configuration.sh
-chmod +x /usr/nvidia-secure_boot.sh
+chmod +x /usr/nvidia-secure-boot.sh
 chmod +x /usr/user-configuration.sh
 
 #Update system
