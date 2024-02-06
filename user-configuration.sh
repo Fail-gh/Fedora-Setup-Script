@@ -7,17 +7,9 @@ then
 
 	sudo flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark com.github.tchx84.Flatseal -y
 
-	echo "[org/gnome/desktop/wm/preferences]
-button-layout='":minimize,maximize,close"'
-[org/gnome/shell/window-switcher]
-current-workspace-only=false
-[org/gnome/desktop/wm/keybindings]
-switch-windows=['<Alt>Tab']
-switch-applications=['<Super>Tab']
-[org/gnome/desktop/interface]
+	echo "[org/gnome/desktop/interface]
 font-antialiasing='"rgba"'
-gtk-theme='"adw-gtk3"'
-color-scheme='"default"'" | sudo tee /etc/dconf/db/local.d/00-fedora-setup
+gtk-theme='"adw-gtk3"'" | sudo tee /etc/dconf/db/local.d/00-fedora-setup
 
 	sudo dconf update
 fi
