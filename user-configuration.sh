@@ -6,12 +6,6 @@ then
 	sudo dnf install gnome-tweaks menulibre adw-gtk3-theme -y
 
 	sudo flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark com.github.tchx84.Flatseal -y
-
-	echo "[org/gnome/desktop/interface]
-font-antialiasing='"rgba"'
-gtk-theme='"adw-gtk3"'" | sudo tee /etc/dconf/db/local.d/00-fedora-setup
-
-	sudo dconf update
 fi
 
 #Check TPM and asks if enable auto decryption
