@@ -3,7 +3,7 @@
 #Adding RPMFusion repos
 dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
-#Enable users to install packages using Gnome Software (Only GUI packages)
+#Enable users to install packages using Gnome Software or similar (Only GUI packages)
 dnf groupupdate core -y
 
 #Switch to full ffpmeg
@@ -70,8 +70,7 @@ then
 Name=Nvidia Secure Boot
 Exec=/usr/nvidia-secure-boot.sh
 Terminal=true
-Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/nvidia-secure-boot.desktop
+Type=Application" > /home/$SUDO_USER/.config/autostart/nvidia-secure-boot.desktop
 		reboot=$(systemd-inhibit | grep akmods)
 		echo "Installing NVIDIA kernel modules"
 		while [ -n "$reboot" ]
@@ -85,7 +84,6 @@ else
 Name=User Configuration
 Exec=/usr/user-configuration.sh
 Terminal=true
-Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/user-configuration.desktop
+Type=Application" > /home/$SUDO_USER/.config/autostart/user-configuration.desktop
 	reboot
 fi

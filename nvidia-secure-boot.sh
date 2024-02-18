@@ -13,8 +13,7 @@ echo "[Desktop Entry]
 Name=User Configuration
 Exec=/usr/user-configuration.sh
 Terminal=true
-Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/user-configuration.desktop
+Type=Application" > /home/$SUDO_USER/.config/autostart/user-configuration.desktop
 
 #Remove old part of the script
 rm /home/$SUDO_USER/.config/autostart/nvidia-secure-boot.desktop

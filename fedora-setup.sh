@@ -34,6 +34,5 @@ done
 Name=Fedora Setup Upgraded
 Exec=/usr/fedora-setup-upgraded.sh
 Terminal=true
-Type=Application
-X-GNOME-Autostart-enabled=true" > /home/$SUDO_USER/.config/autostart/fedora-setup-upgraded.desktop
+Type=Application" > /home/$SUDO_USER/.config/autostart/fedora-setup-upgraded.desktop
 reboot
