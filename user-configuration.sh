@@ -21,7 +21,7 @@ then
 		do
 			case $tpmd in
 				Yes)
-					blkid -t TYPE=crypto_LUKS | cut -d':' -f1 | cut -d'/' -f3 > crypted
+					sudo blkid -t TYPE=crypto_LUKS | cut -d':' -f1 | cut -d'/' -f3 > crypted
 					max=$(wc -l crypted | cut -d' ' -f1)
 					n=1
 					while [ $n -le $max ]
