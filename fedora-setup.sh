@@ -28,9 +28,9 @@ dnf clean all
 dnf check-update
 while [[ $? = 100 || $? = 1 || $? = 3 || $? =  200 ]]
 do
-    dnf upgrade -y
+	dnf upgrade -y
 done
-		echo "[Desktop Entry]
+	echo "[Desktop Entry]
 Name=Fedora Setup Upgraded
 Exec=/usr/fedora-setup-upgraded.sh
 Terminal=true

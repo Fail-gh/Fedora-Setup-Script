@@ -43,10 +43,10 @@ then
 	family=$(cat /proc/cpuinfo | grep "model name" | cut -d':' -f2 | cut -d' ' -f4 | cut -d'-' -f2 | grep -m1 "" | head | grep -Eo '[0-9]{1,256}')
         if [ $family -gt 4000 ]
         then
-            	dnf install intel-media-driver -y
+		dnf install intel-media-driver -y
         else
-            	dnf install libva-intel-driver -y
-        fi	
+		dnf install libva-intel-driver -y
+        fi
 fi
 
 #Install Hardware Accelerated Codec for GPU
@@ -61,9 +61,10 @@ fi
 rm /home/$SUDO_USER/.config/autostart/fedora-setup-upgraded.desktop
 
 #Check Secure Boot state and select next part of the script
+secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
+reboot=$(systemd-inhibit | grep akmods)
 if [ -n "$nvidia" ]
 then
-	secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
 	if [ $secure_boot == "enabled" ]
 	then
 		echo "[Desktop Entry]
@@ -71,14 +72,13 @@ Name=Nvidia Secure Boot
 Exec=/usr/nvidia-secure-boot.sh
 Terminal=true
 Type=Application" > /home/$SUDO_USER/.config/autostart/nvidia-secure-boot.desktop
-		reboot=$(systemd-inhibit | grep akmods)
-		echo "Installing NVIDIA kernel modules"
-		while [ -n "$reboot" ]
-		do
-		    reboot=$(systemd-inhibit | grep akmods)
-		done
-		reboot
 	fi
+	echo "Installing NVIDIA kernel modules"
+	while [ -n "$reboot" ]
+	do
+		reboot=$(systemd-inhibit | grep akmods)
+	done
+	reboot
 else
 	echo "[Desktop Entry]
 Name=User Configuration
