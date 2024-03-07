@@ -56,6 +56,6 @@ sudo mokutil --timeout 10
 sudo rm /home/$LOGNAME/.config/autostart/user-configuration.desktop
 sudo rm /usr/fedora-setup-upgraded.sh
 sudo rm /usr/btrfs-maintenance-configuration.sh
-sudo rm /usr/nvidia-secure_boot.sh
+sudo rm /usr/nvidia-secure-boot.sh
 sudo rm /usr/user-configuration.sh
 reboot
