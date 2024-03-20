@@ -5,9 +5,6 @@ awk '{sub("env_reset","   env_reset,pwfeedback",$2);print}' /etc/sudoers > sudo
 cp sudo /etc/sudoers
 rm sudo
 
-#Remove useless repos
-rm /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:phracek:PyCharm.repo /etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo /etc/yum.repos.d/rpmfusion-nonfree-steam.repo
-
 #Create autostart folder as user
 mkdir /home/$SUDO_USER/.config/autostart/
 chown $SUDO_USER:$SUDO_USER /home/$SUDO_USER/.config/autostart/
