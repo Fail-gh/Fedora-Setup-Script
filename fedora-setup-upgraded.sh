@@ -37,17 +37,7 @@ dnf swap mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686 -y
 dnf swap mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686 -y
 
 #Install Hardware Accelerated Codec for Intel
-cpu=$(cat /proc/cpuinfo | grep vendor | cut -d':' -f2 | cut -d' ' -f2 | grep -m1 "")
-if [ $cpu = "GenuineIntel" ]
-then
-	family=$(cat /proc/cpuinfo | grep "model name" | cut -d':' -f2 | cut -d' ' -f4 | cut -d'-' -f2 | grep -m1 "" | head | grep -Eo '[0-9]{1,256}')
-        if [ $family -gt 4000 ]
-        then
-		dnf install intel-media-driver -y
-        else
-		dnf install libva-intel-driver -y
-        fi
-fi
+dnf install intel-media-driver libva-intel-driver -y
 
 #Install Hardware Accelerated Codec for GPU
 nvidia=$(lspci | grep NVIDIA)
