@@ -62,7 +62,12 @@ Name=Nvidia Secure Boot
 Exec=/usr/nvidia-secure-boot.sh
 Terminal=true
 Type=Application" > /home/$SUDO_USER/.config/autostart/nvidia-secure-boot.desktop
-	fi
+	else
+		echo "[Desktop Entry]
+Name=User Configuration
+Exec=/usr/user-configuration.sh
+Terminal=true
+Type=Application" > /home/$SUDO_USER/.config/autostart/user-configuration.desktop
 	echo "Installing NVIDIA kernel modules"
 	while [ -n "$reboot" ]
 	do
