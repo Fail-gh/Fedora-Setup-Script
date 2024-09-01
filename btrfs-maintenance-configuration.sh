@@ -1,8 +1,8 @@
 #!/bin/sudo bash
 
 #Auto BTRFS maintenance
-sed -i 's/BTRFS_BALANCE_MOUNTPOINTS="\/"/BTRFS_BALANCE_MOUNTPOINTS="\/:\/home"/' /etc/sysconfig/btrfsmaintenance
-sed -i 's/BTRFS_SCRUB_MOUNTPOINTS="\/"/BTRFS_SCRUB_MOUNTPOINTS="\/:\/home"/' /etc/sysconfig/btrfsmaintenance
+sed -i 's|BTRFS_BALANCE_MOUNTPOINTS="/"|BTRFS_BALANCE_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
+sed -i 's|BTRFS_SCRUB_MOUNTPOINTS="/"|BTRFS_SCRUB_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
 
 #Configure snapshot of home
 snapper -c home create-config /home
