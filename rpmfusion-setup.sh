@@ -1,5 +1,11 @@
 #!/bin/sudo bash
 
+#Add feedback when writing sudo password
+if ! grep -q pwfeedback /etc/sudoers
+then
+	echo -e "\n# Enables visual feedback (displaying asterisks) when entering a password\nDefaults pwfeedback" >> /etc/sudoers
+fi
+
 #Install BTRFS Assistant
 dnf install btrfs-assistant -y
 
@@ -19,7 +25,6 @@ dnf update @core -y
 dnf swap ffmpeg-free ffmpeg --allowerasing -y
 
 #Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
-dnf install @multimedia -y
 dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
 dnf update @sound-and-video -y
 
@@ -38,48 +43,40 @@ dnf install libdvdcss -y
 
 #Install RPMFusion NonFree Tainted repo
 dnf install rpmfusion-nonfree-release-tainted -y
-dnf --repo=rpmfusion-nonfree-tainted install "*-firmware" -y || dnf install "*-firmware"
+dnf install *-firmware
 
 #Install Hardware Accelerated Codec for GPU
 nvidia=$(lspci | grep NVIDIA)
 if [ -n "$nvidia" ]
 then
-	dnf install libva-nvidia-driver.{i686,x86_64} akmod-nvidia xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-power vulkan xorg-x11-drv-nvidia-cuda-libs nvidia-vaapi-driver libva-utils vdpauinfo -y
-
+	dnf install akmod-nvidia xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-power vulkan xorg-x11-drv-nvidia-cuda-libs libva-nvidia-driver.{i686,x86_64} libva-utils vdpauinfo -y
 	grubby --update-kernel=ALL --args='nvidia-drm.modeset=1'
 fi
 
+rm $HOME/.config/autostart/rpmfusion-setup.desktop
+
 #Check Secure Boot state and select next part of the script
 secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
-reboot=$(systemd-inhibit | grep akmods)
+reboot=$(systemd-inhibit | grep akmods)\
+
 if [ -n "$nvidia" ]
 then
 	if [ $secure_boot == "enabled" ]
 	then
-		echo "[Desktop Entry]
-Name=Nvidia Secure Boot
-Exec=/usr/nvidia-secure-boot.sh
-Terminal=true
-Type=Application" > /home/$SUDO_USER/.config/autostart/nvidia-secure-boot.desktop
+		mv $HOME/.config/autostart/nvidia-secure-boot $HOME/.config/autostart/nvidia-secure-boot.desktop
 	elif [ $secure_boot == "disabled" ]
 	then
-		echo "[Desktop Entry]
-Name=User Configuration
-Exec=/usr/user-configuration.sh
-Terminal=true
-Type=Application" > /home/$SUDO_USER/.config/autostart/user-configuration.desktop
+		mv $HOME/.config/autostart/user-configuration $HOME/.config/autostart/user-configuration.desktop
 	fi
-	echo "Installing NVIDIA kernel modules"
+
 	while [ -n "$reboot" ]
 	do
 		reboot=$(systemd-inhibit | grep akmods)
 	done
+
 	reboot
 else
-	echo "[Desktop Entry]
-Name=User Configuration
-Exec=/usr/user-configuration.sh
-Terminal=true
-Type=Application" > /home/$SUDO_USER/.config/autostart/user-configuration.desktop
+	mv $HOME/.config/autostart/user-configuration $HOME/.config/autostart/user-configuration.desktop
+
 	reboot
 fi

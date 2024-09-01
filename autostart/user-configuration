@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=User Configuration
+Type=Application
+Exec=HOME/Fedora-Setup-Script/user-configuration.sh
+Terminal=true
