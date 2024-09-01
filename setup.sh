@@ -12,7 +12,7 @@ mkdir -p $HOME/.config/autostart
 cp ./autostart/* $HOME/.config/autostart/
 
 #Garant execution permission to all scripts
-chmod +x ./setup-rpmfusion.sh
+chmod +x ./rpmfusion-setup.sh
 chmod +x ./btrfs-maintenance-configuration.sh
 chmod +x ./nvidia-secure-boot.sh
 chmod +x ./user-configuration.sh
@@ -39,6 +39,6 @@ then
 fi
 
 rm $HOME/.config/autostart/fedora-setup.desktop
-mv $HOME/.config/autostart/setup-rpmfusion $HOME/.config/autostart/setup-rpmfusion.desktop
+mv $HOME/.config/autostart/rpmfusion-setup $HOME/.config/autostart/rpmfusion-setup.desktop
 
 reboot
