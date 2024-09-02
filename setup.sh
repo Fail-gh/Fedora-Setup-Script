@@ -14,7 +14,6 @@ cp ./autostart/* "$HOME/.config/autostart/"
 
 #Garant execution permission to all scripts
 chmod +x ./rpmfusion-setup.sh
-chmod +x ./btrfs-maintenance-configuration.sh
 chmod +x ./nvidia-secure-boot.sh
 chmod +x ./user-configuration.sh
 
