@@ -1,11 +1,11 @@
 #!/bin/bash
 
 #Install, if on GNOME, Extension Manager, libadwaita theme GTK-3 flatpak apps and Gear Lever a tool to use appimage more easily
-if [[ $XDG_CURRENT_DESKTOP = "GNOME" ]]
+if [ $XDG_CURRENT_DESKTOP = "GNOME" ]
 then
-	sudo dnf install gnome-tweaks menulibre adw-gtk3-theme -y
+	pkcon install gnome-tweaks menulibre adw-gtk3-theme -y
 
-	sudo flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark com.github.tchx84.Flatseal -y
+	flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark com.github.tchx84.Flatseal -y
 fi
 
 #Check TPM and asks if enable auto decryption
@@ -52,10 +52,13 @@ else
 	echo "No encrypted disk"
 fi
 
-sudo mokutil --timeout 10
-sudo rm /home/$LOGNAME/.config/autostart/user-configuration.desktop
-sudo rm /usr/fedora-setup-upgraded.sh
-sudo rm /usr/btrfs-maintenance-configuration.sh
-sudo rm /usr/nvidia-secure-boot.sh
-sudo rm /usr/user-configuration.sh
+nvidia=$(lspci | grep NVIDIA)
+secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
+if [[ -n "$nvidia" && $secure_boot == "enabled" ]]
+then
+	sudo mokutil --timeout 10
+fi
+
+rm $HOME/.config/autostart/user-configuration.desktop
+
 reboot
