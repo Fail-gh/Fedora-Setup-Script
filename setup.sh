@@ -7,8 +7,6 @@ do
 	sed -i "s|HOME|$PWD|g" "$file"
 done
 
-sed -i "s|HOME|$PWD|g" "./rpmfusion-setup.sh"
-
 #Create autostart folder as user
 mkdir -p $HOME/.config/autostart
 
