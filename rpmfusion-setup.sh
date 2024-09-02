@@ -47,6 +47,7 @@ dnf install *-firmware
 
 #Install Hardware Accelerated Codec for GPU
 nvidia=$(lspci | grep NVIDIA)
+
 if [ -n "$nvidia" ]
 then
 	dnf install akmod-nvidia xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-power vulkan xorg-x11-drv-nvidia-cuda-libs libva-nvidia-driver.{i686,x86_64} libva-utils vdpauinfo -y

@@ -11,6 +11,7 @@ fi
 #Check TPM and asks if enable auto decryption
 luks=$(lsblk | grep luks)
 tpm=$(systemd-cryptenroll --tpm2-device=list | grep tpm)
+
 if [ -n "$luks" ]
 then
 	if [ -n "$tpm" ]
@@ -22,20 +23,17 @@ then
 			case $tpmd in
 				Yes)
 					sudo blkid -t TYPE=crypto_LUKS | cut -d':' -f1 | cut -d'/' -f3 > crypted
-					max=$(wc -l crypted | cut -d' ' -f1)
-					n=1
-					while [ $n -le $max ]
+					max=$(wc -l < crypted)
+					for ((n=1; n<=max; n++))
 					do
-						part=$(sed -n ''$n'p' crypted)
+						part=$(sed -n "${n}p" crypted)
 						((n++))
 						sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=2+5+6 /dev/$part
 					done
 					sudo awk '{sub("none","-",$3);print}' /etc/crypttab > crypttab
 					sudo awk '{sub("discard","tpm2-device=auto,discard",$4);print}' crypttab > crypttab2
 					sudo cp crypttab2 /etc/crypttab
-					rm crypted
-					rm crypttab
-					rm crypttab2
+					rm crypted crypttab crypttab2
 					echo "Please wait..."
 					sudo grubby --args="rd.luks.options=tpm2-device=auto" --update-kernel=ALL
 					sudo dracut -f
@@ -47,6 +45,8 @@ then
 					break;;
 			esac
 		done
+	else
+		echo "TPM not available"
 	fi
 else
 	echo "No encrypted disk"
@@ -54,6 +54,7 @@ fi
 
 nvidia=$(lspci | grep NVIDIA)
 secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
+
 if [[ -n "$nvidia" && $secure_boot == "enabled" ]]
 then
 	sudo mokutil --timeout 10
