@@ -1,15 +1,16 @@
 #!/bin/bash
 
-#Set current folder to autostart
-sed -i "s|HOME|$PWD|g" "./autostart/fedora-setup.desktop"
-sed -i "s|HOME|$PWD|g" "./autostart/rpmfusion-setup"
-sed -i "s|HOME|$PWD|g" "./autostart/nvidia-secure-boot"
-sed -i "s|HOME|$PWD|g" "./autostart/user-configuration"
+# Set current folder to autostart
+# Using "HOME" as a placeholder for replacement with the current working directory
+for file in ./autostart/*
+do
+	sed -i "s|HOME|$PWD|g" "$file"
+done
 
 #Create autostart folder as user
 mkdir -p $HOME/.config/autostart
 
-cp ./autostart/* $HOME/.config/autostart/
+cp ./autostart/* "$HOME/.config/autostart/"
 
 #Garant execution permission to all scripts
 chmod +x ./rpmfusion-setup.sh
