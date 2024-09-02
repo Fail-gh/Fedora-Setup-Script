@@ -27,7 +27,6 @@ then
 					for ((n=1; n<=max; n++))
 					do
 						part=$(sed -n "${n}p" crypted)
-						((n++))
 						sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=2+5+6 /dev/$part
 					done
 					sudo awk '{sub("none","-",$3);print}' /etc/crypttab > crypttab
