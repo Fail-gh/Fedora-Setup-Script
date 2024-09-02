@@ -7,7 +7,7 @@ sed -i 's|BTRFS_SCRUB_MOUNTPOINTS="/"|BTRFS_SCRUB_MOUNTPOINTS="/:/home"|g' "/etc
 #Configure snapshot of home
 snapper -c home create-config /home
 
-echo "
+cat <<EOF > /etc/snapper/configs/home
 # subvolume to snapshot
 SUBVOLUME="/home"
 
@@ -69,12 +69,12 @@ EMPTY_PRE_POST_CLEANUP="yes"
 
 # limits for empty pre-post-pair cleanup
 EMPTY_PRE_POST_MIN_AGE="1800"
-" > /etc/snapper/configs/home
+EOF
 
 #Configure snapshot of root
 snapper -c root create-config /
 
-echo "
+cat <<EOF > /etc/snapper/configs/root
 # subvolume to snapshot
 SUBVOLUME="/"
 
@@ -136,10 +136,11 @@ EMPTY_PRE_POST_CLEANUP="yes"
 
 # limits for empty pre-post-pair cleanup
 EMPTY_PRE_POST_MIN_AGE="1800"
-" > /etc/snapper/configs/root
+EOF
 
 #Create service for snapshot of home at boot
-echo "[Unit]
+cat <<EOF > /usr/lib/systemd/system/snapper-boot-home.service
+[Unit]
 Description=Take snapper snapshot of home on boot
 ConditionPathExists=/etc/snapper/configs/home
 
@@ -153,16 +154,19 @@ NoNewPrivileges=false
 PrivateNetwork=true
 ProtectHostname=true
 RestrictAddressFamilies=AF_UNIX
-RestrictRealtime=true" > /usr/lib/systemd/system/snapper-boot-home.service
+RestrictRealtime=true
+EOF
 
-echo "[Unit]
+cat <<EOF > /usr/lib/systemd/system/snapper-boot-home.timer
+[Unit]
 Description=Take snapper snapshot of home on boot
 
 [Timer]
 OnBootSec=1
 
 [Install]
-WantedBy=timers.target" > /usr/lib/systemd/system/snapper-boot-home.timer
+WantedBy=timers.target
+EOF
 
 #Enable snapshot of home and root at boot and remove old snapshot
 systemctl enable --now snapper-boot.timer
