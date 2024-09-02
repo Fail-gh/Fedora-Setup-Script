@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=Nvidia SecureBoot
+Type=Application
+Exec=HOME/nvidia-secure-boot.sh
+Terminal=true

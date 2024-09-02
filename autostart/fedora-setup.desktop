@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=Start Fedora setup script
+Type=Application
+Exec=HOME/setup.sh
+Terminal=true

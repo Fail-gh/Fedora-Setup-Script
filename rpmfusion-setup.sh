@@ -1,13 +1,22 @@
 #!/bin/sudo bash
 
+#Add feedback when writing sudo password
+if ! grep -q pwfeedback /etc/sudoers
+then
+	echo -e "\n# Enables visual feedback (displaying asterisks) when entering a password\nDefaults pwfeedback" >> /etc/sudoers
+fi
+
+#Install BTRFS Assistant
+dnf install btrfs-assistant -y
+
 #Auto BTRFS maintenance
-sed -i 's/BTRFS_BALANCE_MOUNTPOINTS="\/"/BTRFS_BALANCE_MOUNTPOINTS="\/:\/home"/' /etc/sysconfig/btrfsmaintenance
-sed -i 's/BTRFS_SCRUB_MOUNTPOINTS="\/"/BTRFS_SCRUB_MOUNTPOINTS="\/:\/home"/' /etc/sysconfig/btrfsmaintenance
+sed -i 's|BTRFS_BALANCE_MOUNTPOINTS="/"|BTRFS_BALANCE_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
+sed -i 's|BTRFS_SCRUB_MOUNTPOINTS="/"|BTRFS_SCRUB_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
 
 #Configure snapshot of home
 snapper -c home create-config /home
 
-echo "
+cat <<EOF > /etc/snapper/configs/home
 # subvolume to snapshot
 SUBVOLUME="/home"
 
@@ -69,12 +78,12 @@ EMPTY_PRE_POST_CLEANUP="yes"
 
 # limits for empty pre-post-pair cleanup
 EMPTY_PRE_POST_MIN_AGE="1800"
-" > /etc/snapper/configs/home
+EOF
 
 #Configure snapshot of root
 snapper -c root create-config /
 
-echo "
+cat <<EOF > /etc/snapper/configs/root
 # subvolume to snapshot
 SUBVOLUME="/"
 
@@ -136,10 +145,11 @@ EMPTY_PRE_POST_CLEANUP="yes"
 
 # limits for empty pre-post-pair cleanup
 EMPTY_PRE_POST_MIN_AGE="1800"
-" > /etc/snapper/configs/root
+EOF
 
 #Create service for snapshot of home at boot
-echo "[Unit]
+cat <<EOF > /usr/lib/systemd/system/snapper-boot-home.service
+[Unit]
 Description=Take snapper snapshot of home on boot
 ConditionPathExists=/etc/snapper/configs/home
 
@@ -153,18 +163,94 @@ NoNewPrivileges=false
 PrivateNetwork=true
 ProtectHostname=true
 RestrictAddressFamilies=AF_UNIX
-RestrictRealtime=true" > /usr/lib/systemd/system/snapper-boot-home.service
+RestrictRealtime=true
+EOF
 
-echo "[Unit]
+cat <<EOF > /usr/lib/systemd/system/snapper-boot-home.timer
+[Unit]
 Description=Take snapper snapshot of home on boot
 
 [Timer]
 OnBootSec=1
 
 [Install]
-WantedBy=timers.target" > /usr/lib/systemd/system/snapper-boot-home.timer
+WantedBy=timers.target
+EOF
 
 #Enable snapshot of home and root at boot and remove old snapshot
 systemctl enable --now snapper-boot.timer
 systemctl enable --now snapper-boot-home.timer
 systemctl enable --now snapper-cleanup.timer
+
+#Adding RPMFusion repos
+dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
+
+#Enablig OpenH264 for RPM Fusion
+dnf config-manager --enable fedora-cisco-openh264 -y
+
+#Enable users to install packages using Gnome Software or similar (Only GUI packages)
+dnf update @core -y
+
+#Switch to full ffpmeg
+dnf swap ffmpeg-free ffmpeg --allowerasing -y
+
+#Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
+dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
+dnf update @sound-and-video -y
+
+#Install Hardware Accelerated Codec for Intel
+dnf install intel-media-driver libva-intel-driver -y
+
+#Install mesa Hardware Accelerated Codec
+dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y
+dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld -y
+dnf swap mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686 -y
+dnf swap mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686 -y
+
+#Install RPMFusion Free Tainted repo
+dnf install rpmfusion-free-release-tainted -y
+dnf install libdvdcss -y
+
+#Install RPMFusion NonFree Tainted repo
+dnf install rpmfusion-nonfree-release-tainted -y
+dnf install *-firmware -y
+
+#Install Hardware Accelerated Codec for GPU
+nvidia=$(lspci | grep NVIDIA)
+
+if [ -n "$nvidia" ]
+then
+	dnf install akmod-nvidia xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-power vulkan xorg-x11-drv-nvidia-cuda-libs libva-nvidia-driver.{i686,x86_64} libva-utils vdpauinfo -y
+	grubby --update-kernel=ALL --args='nvidia-drm.modeset=1'
+fi
+
+# Remove RPMFusion setup autostart
+rm $PWD/.config/autostart/rpmfusion-setup.desktop
+
+#Check Secure Boot state and select next part of the script
+secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
+reboot=$(systemd-inhibit | grep akmods)
+
+if [ -n "$nvidia" ]
+then
+	if [ $secure_boot == "enabled" ]
+	then
+		mv $PWD/.config/autostart/nvidia-secure-boot $PWD/.config/autostart/nvidia-secure-boot.desktop
+	elif [ $secure_boot == "disabled" ]
+	then
+		mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
+	fi
+
+	while [ -n "$reboot" ]
+	do
+		sleep 1
+		reboot=$(systemd-inhibit | grep akmods)
+	done
+
+	reboot
+else
+	rm $PWD/.config/autostart/nvidia-secure-boot
+	mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
+
+	reboot
+fi
