@@ -53,6 +53,7 @@ then
 	grubby --update-kernel=ALL --args='nvidia-drm.modeset=1'
 fi
 
+# Remove RPMFusion setup autostart
 rm $HOME/.config/autostart/rpmfusion-setup.desktop
 
 #Check Secure Boot state and select next part of the script
@@ -71,6 +72,7 @@ then
 
 	while [ -n "$reboot" ]
 	do
+		sleep 1
 		reboot=$(systemd-inhibit | grep akmods)
 	done
 
