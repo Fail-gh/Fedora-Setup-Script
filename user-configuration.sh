@@ -3,7 +3,9 @@
 #Install, if on GNOME, Extension Manager, libadwaita theme GTK-3 flatpak apps and Gear Lever a tool to use appimage more easily
 if [ $XDG_CURRENT_DESKTOP = "GNOME" ]
 then
-	pkcon install gnome-tweaks menulibre adw-gtk3-theme -y
+	pkcon install gnome-tweaks -y
+	pkcon install menulibre -y
+	pkcon install adw-gtk3-theme -y
 
 	flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark com.github.tchx84.Flatseal -y
 fi
