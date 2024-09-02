@@ -10,7 +10,7 @@ fi
 dnf install btrfs-assistant -y
 
 #Execute btrfs_maintenance_configuration
-./btrfs-maintenance-configuration.sh
+HOME/btrfs-maintenance-configuration.sh
 
 #Adding RPMFusion repos
 dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
@@ -43,7 +43,7 @@ dnf install libdvdcss -y
 
 #Install RPMFusion NonFree Tainted repo
 dnf install rpmfusion-nonfree-release-tainted -y
-dnf install *-firmware
+dnf install *-firmware -y
 
 #Install Hardware Accelerated Codec for GPU
 nvidia=$(lspci | grep NVIDIA)
@@ -55,20 +55,20 @@ then
 fi
 
 # Remove RPMFusion setup autostart
-rm $HOME/.config/autostart/rpmfusion-setup.desktop
+rm $PWD/.config/autostart/rpmfusion-setup.desktop
 
 #Check Secure Boot state and select next part of the script
 secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
-reboot=$(systemd-inhibit | grep akmods)\
+reboot=$(systemd-inhibit | grep akmods)
 
 if [ -n "$nvidia" ]
 then
 	if [ $secure_boot == "enabled" ]
 	then
-		mv $HOME/.config/autostart/nvidia-secure-boot $HOME/.config/autostart/nvidia-secure-boot.desktop
+		mv $PWD/.config/autostart/nvidia-secure-boot $PWD/.config/autostart/nvidia-secure-boot.desktop
 	elif [ $secure_boot == "disabled" ]
 	then
-		mv $HOME/.config/autostart/user-configuration $HOME/.config/autostart/user-configuration.desktop
+		mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
 	fi
 
 	while [ -n "$reboot" ]
@@ -79,7 +79,8 @@ then
 
 	reboot
 else
-	mv $HOME/.config/autostart/user-configuration $HOME/.config/autostart/user-configuration.desktop
+	rm $PWD/.config/autostart/nvidia-secure-boot
+	mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
 
 	reboot
 fi

@@ -9,9 +9,9 @@ mokutil --timeout -1
 mokutil --import /etc/pki/akmods/certs/public_key.der
 
 #Create autostart for next part of the script
-mv $HOME/.config/autostart/user-configuration $HOME/.config/autostart/user-configuration.desktop
+mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
 
 #Remove old part of the script
-rm $HOME/.config/autostart/nvidia-secure-boot.desktop
+rm $PWD/.config/autostart/nvidia-secure-boot.desktop
 
 reboot
