@@ -213,7 +213,7 @@ dnf install libdvdcss -y
 
 #Install RPMFusion NonFree Tainted repo
 dnf install rpmfusion-nonfree-release-tainted -y
-dnf install *-firmware -y
+dnf install "*-firmware" --exclude=gnome-firmware,python3-virt-firmware -y
 
 #Install Hardware Accelerated Codec for GPU
 nvidia=$(lspci | grep NVIDIA)

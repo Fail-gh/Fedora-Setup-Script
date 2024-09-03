@@ -5,9 +5,8 @@ if [ $XDG_CURRENT_DESKTOP = "GNOME" ]
 then
 	pkcon install gnome-tweaks -y
 	pkcon install menulibre -y
-	pkcon install adw-gtk3-theme -y
 
-	flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever org.gtk.Gtk3theme.adw-gtk3 org.gtk.Gtk3theme.adw-gtk3-dark com.github.tchx84.Flatseal -y
+	flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal -y
 fi
 
 #Check TPM and asks if enable auto decryption
