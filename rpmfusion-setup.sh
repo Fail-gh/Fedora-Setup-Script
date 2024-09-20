@@ -195,6 +195,7 @@ dnf update @core -y
 dnf swap ffmpeg-free ffmpeg --allowerasing -y
 
 #Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
+dnf install @multimedia -y
 dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
 dnf update @sound-and-video -y
 
