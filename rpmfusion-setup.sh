@@ -199,8 +199,8 @@ dnf install @multimedia -y
 dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
 dnf update @sound-and-video -y
 
-#Install Hardware Accelerated Codec for Intel
-dnf install intel-media-driver libva-intel-driver -y
+#Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
+dnf install intel-media-driver -y
 
 #Install mesa Hardware Accelerated Codec
 dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y
