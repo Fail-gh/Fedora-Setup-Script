@@ -1,12 +1,9 @@
 #!/bin/bash
 
-#Install, if on GNOME, Extension Manager, libadwaita theme GTK-3 flatpak apps and Gear Lever a tool to use appimage more easily
-if [ $XDG_CURRENT_DESKTOP = "GNOME" ]
-then
-	pkcon install gnome-tweaks -y
+#Install GNOME Tweaks, Extension Manager, Menu Libre a tool to manage GNOME menu and Gear Lever a tool to use appimage more easily
+pkcon install gnome-tweaks -y
 
-	flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal org.bluesabre.MenuLibre -y
-fi
+flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal org.bluesabre.MenuLibre -y
 
 #Check TPM and asks if enable auto decryption
 luks=$(lsblk | grep luks)
