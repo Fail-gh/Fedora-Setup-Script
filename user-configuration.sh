@@ -4,9 +4,8 @@
 if [ $XDG_CURRENT_DESKTOP = "GNOME" ]
 then
 	pkcon install gnome-tweaks -y
-	pkcon install menulibre -y
 
-	flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal -y
+	flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal org.bluesabre.MenuLibre -y
 fi
 
 #Check TPM and asks if enable auto decryption
@@ -52,14 +51,4 @@ else
 	echo "No encrypted disk"
 fi
 
-nvidia=$(lspci | grep NVIDIA)
-secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
-
-if [[ -n "$nvidia" && $secure_boot == "enabled" ]]
-then
-	sudo mokutil --timeout 10
-fi
-
 rm $HOME/.config/autostart/user-configuration.desktop
-
-reboot
