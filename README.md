@@ -1,6 +1,6 @@
 # Fedora-Setup-Script
 
-### :warning: Tested only on GNOME, autostart doesn't show terminal in KDE at the moment, other Desktop Environment are not tested :warning:
+### :warning: Only works with the latest version of Fedora Workstation with GNOME :warning:
 
 ## Install instruction
 
