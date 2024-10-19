@@ -228,30 +228,18 @@ fi
 # Remove RPMFusion setup autostart
 rm $PWD/.config/autostart/rpmfusion-setup.desktop
 
-#Check Secure Boot state and select next part of the script
-secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
+#Wait for the NVIDIA driver to load
 reboot=$(systemd-inhibit | grep akmods)
 
 if [ -n "$nvidia" ]
 then
-	if [ $secure_boot == "enabled" ]
-	then
-		mv $PWD/.config/autostart/nvidia-secure-boot $PWD/.config/autostart/nvidia-secure-boot.desktop
-	elif [ $secure_boot == "disabled" ]
-	then
-		mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
-	fi
-
 	while [ -n "$reboot" ]
 	do
 		sleep 1
 		reboot=$(systemd-inhibit | grep akmods)
 	done
-
-	reboot
-else
-	rm $PWD/.config/autostart/nvidia-secure-boot
-	mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
-
-	reboot
 fi
+
+mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
+
+reboot
