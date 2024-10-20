@@ -13,3 +13,5 @@ chmod +x setup.sh
 
 ./setup.sh
 ```
+
+### :warning: Enable Third Party Repo during first setup :warning:
