@@ -2,6 +2,8 @@
 
 ### :warning: Only works with the latest version of Fedora Workstation with GNOME :warning:
 
+### :warning: Enable Third Party Repo during first setup :warning:
+
 ## Install instruction
 
 ```
@@ -13,5 +15,3 @@ chmod +x setup.sh
 
 ./setup.sh
 ```
-
-### :warning: Enable Third Party Repo during first setup :warning:
