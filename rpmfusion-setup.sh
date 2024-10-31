@@ -1,21 +1,22 @@
 #!/bin/sudo bash
 
-#Add feedback when writing sudo password
+# Add feedback when entering the sudo password
 if ! grep -q pwfeedback /etc/sudoers
 then
 	echo -e "\n# Enables visual feedback (displaying asterisks) when entering a password\nDefaults pwfeedback" >> /etc/sudoers
 fi
 
-#Install BTRFS Assistant
+# Install BTRFS Assistant
 dnf install btrfs-assistant -y
 
-#Auto BTRFS maintenance
+# Auto BTRFS maintenance configuration
 sed -i 's|BTRFS_BALANCE_MOUNTPOINTS="/"|BTRFS_BALANCE_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
 sed -i 's|BTRFS_SCRUB_MOUNTPOINTS="/"|BTRFS_SCRUB_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
 
-#Configure snapshot of home
+# Configure snapshot of home
 snapper -c home create-config /home
 
+# Create snapper configuration for home
 cat <<EOF > /etc/snapper/configs/home
 # subvolume to snapshot
 SUBVOLUME="/home"
@@ -80,9 +81,10 @@ EMPTY_PRE_POST_CLEANUP="yes"
 EMPTY_PRE_POST_MIN_AGE="1800"
 EOF
 
-#Configure snapshot of root
+# Configure snapshot of root
 snapper -c root create-config /
 
+# Create snapper configuration for root
 cat <<EOF > /etc/snapper/configs/root
 # subvolume to snapshot
 SUBVOLUME="/"
@@ -147,7 +149,7 @@ EMPTY_PRE_POST_CLEANUP="yes"
 EMPTY_PRE_POST_MIN_AGE="1800"
 EOF
 
-#Create service for snapshot of home at boot
+# Create service for home snapshot on boot
 cat <<EOF > /usr/lib/systemd/system/snapper-boot-home.service
 [Unit]
 Description=Take snapper snapshot of home on boot
@@ -166,6 +168,7 @@ RestrictAddressFamilies=AF_UNIX
 RestrictRealtime=true
 EOF
 
+# Timer for snapper boot-home service
 cat <<EOF > /usr/lib/systemd/system/snapper-boot-home.timer
 [Unit]
 Description=Take snapper snapshot of home on boot
@@ -177,46 +180,46 @@ OnBootSec=1
 WantedBy=timers.target
 EOF
 
-#Enable snapshot of home and root at boot and remove old snapshot
+# Enable and start timers
 systemctl enable --now snapper-boot.timer
 systemctl enable --now snapper-boot-home.timer
 systemctl enable --now snapper-cleanup.timer
 
-#Adding RPMFusion repos
+# Add RPMFusion repositories
 dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
-#Enablig OpenH264 for RPM Fusion
+# Enable OpenH264 for RPM Fusion
 dnf4 config-manager --enable fedora-cisco-openh264 -y
 
-#Enable users to install packages using Gnome Software or similar (Only GUI packages)
+# Enable users to install packages using Gnome Software or similar (Only GUI packages)
 dnf update @core -y
 
-#Switch to full ffpmeg
+# Switch to full ffpmeg
 dnf swap ffmpeg-free ffmpeg --allowerasing -y
 
-#Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
+# Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
 dnf install @multimedia -y
 dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
 dnf update @sound-and-video -y
 
-#Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
+# Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
 dnf install intel-media-driver -y
 
-#Install mesa Hardware Accelerated Codec
+# Install mesa Hardware Accelerated Codec
 dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y
 dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld -y
 dnf swap mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686 -y
 dnf swap mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686 -y
 
-#Install RPMFusion Free Tainted repo
+# Install RPMFusion Free Tainted repo
 dnf install rpmfusion-free-release-tainted -y
 dnf install libdvdcss -y
 
-#Install RPMFusion NonFree Tainted repo
+# Install RPMFusion NonFree Tainted repo
 dnf install rpmfusion-nonfree-release-tainted -y
 dnf install "*-firmware" --exclude=gnome-firmware,python3-virt-firmware -y
 
-#Install Hardware Accelerated Codec for GPU
+# NVIDIA driver installation if NVIDIA hardware is detected
 nvidia=$(lspci | grep NVIDIA)
 
 if [ -n "$nvidia" ]
@@ -225,26 +228,26 @@ then
 	grubby --update-kernel=ALL --args='nvidia-drm.modeset=1'
 fi
 
-# Remove RPMFusion setup autostart
-rm $PWD/.config/autostart/rpmfusion-setup.desktop
-
-#Wait for the NVIDIA driver to load
-reboot=$(systemd-inhibit | grep akmods)
-
-#Check secure boot status
-secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
+# Remove RPMFusion setup from autostart
+rm "$PWD/.config/autostart/rpmfusion-setup.desktop"
 
 if [ -n "$nvidia" ]
 then
+	# Wait for NVIDIA driver to load if present
+	reboot=$(systemd-inhibit | grep akmods)
+
 	while [ -n "$reboot" ]
 	do
 		sleep 1
 		reboot=$(systemd-inhibit | grep akmods)
 	done
 
-	if [[ $secure_boot == "enabled" ]]
+	# Check secure boot status
+	secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
+
+	if [[ "$secure_boot" == "enabled" ]]
 	then
-		mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
+		mv "$PWD/.config/autostart/user-configuration" "$PWD/.config/autostart/user-configuration.desktop"
 
 		gnome-software --details-pkg=xorg-x11-drv-nvidia
 
@@ -252,6 +255,7 @@ then
 	fi
 fi
 
-mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
+mv "$PWD/.config/autostart/user-configuration" "$PWD/.config/autostart/user-configuration.desktop"
 
+# Final reboot
 reboot
