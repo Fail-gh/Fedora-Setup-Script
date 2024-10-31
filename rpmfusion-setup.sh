@@ -231,6 +231,9 @@ rm $PWD/.config/autostart/rpmfusion-setup.desktop
 #Wait for the NVIDIA driver to load
 reboot=$(systemd-inhibit | grep akmods)
 
+#Check secure boot status
+secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
+
 if [ -n "$nvidia" ]
 then
 	while [ -n "$reboot" ]
@@ -238,6 +241,15 @@ then
 		sleep 1
 		reboot=$(systemd-inhibit | grep akmods)
 	done
+
+	if [[ $secure_boot == "enabled" ]]
+	then
+		mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
+
+		gnome-software --details-pkg=xorg-x11-drv-nvidia
+
+		zenity --progress --no-cancel --pulsate --text="Enable NVIDIA driver in GNOME Software"
+	fi
 fi
 
 mv $PWD/.config/autostart/user-configuration $PWD/.config/autostart/user-configuration.desktop
