@@ -189,7 +189,7 @@ systemctl enable --now snapper-cleanup.timer
 dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
 
 # Enable OpenH264 for RPM Fusion
-dnf4 config-manager --enable fedora-cisco-openh264 -y
+dnf config-manager setopt fedora-cisco-openh264.enabled=1
 
 # Enable users to install packages using Gnome Software or similar (Only GUI packages)
 dnf update @core -y
