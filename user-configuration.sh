@@ -4,7 +4,7 @@
 pkcon install gnome-tweaks -y
 
 # Install additional tools using Flatpak
-flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal org.bluesabre.MenuLibre -y
+flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal -y
 
 # Check if LUKS encrypted partitions and TPM are available
 luks=$(lsblk | grep luks)
