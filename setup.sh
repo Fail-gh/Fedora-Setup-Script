@@ -42,7 +42,7 @@ then
 fi
 
 rm "$HOME/.config/autostart/fedora-setup.desktop"
-mv "$HOME/.config/autostart/rpmfusion-setup $HOME/.config/autostart/rpmfusion-setup.desktop"
+mv "$HOME/.config/autostart/rpmfusion-setup" "$HOME/.config/autostart/rpmfusion-setup.desktop"
 
 # Reboot the system
 reboot
