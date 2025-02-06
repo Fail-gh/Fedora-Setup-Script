@@ -192,15 +192,13 @@ dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(r
 dnf config-manager setopt fedora-cisco-openh264.enabled=1
 
 # Enable users to install packages using Gnome Software or similar (Only GUI packages)
-dnf update @core -y
+dnf4 update @core -y
 
 # Switch to full ffpmeg
 dnf swap ffmpeg-free ffmpeg --allowerasing -y
 
 # Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
-dnf install @multimedia -y
-dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
-dnf update @sound-and-video -y
+dnf4 update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
 
 # Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
 dnf install intel-media-driver -y
@@ -217,16 +215,19 @@ dnf install libdvdcss -y
 
 # Install RPMFusion NonFree Tainted repo
 dnf install rpmfusion-nonfree-release-tainted -y
-dnf install "*-firmware" --exclude=gnome-firmware,python3-virt-firmware -y
+dnf --repo=rpmfusion-nonfree-tainted install "*-firmware" -y
 
 # NVIDIA driver installation if NVIDIA hardware is detected
 nvidia=$(lspci | grep NVIDIA)
 
 if [ -n "$nvidia" ]
 then
-	dnf install akmod-nvidia xorg-x11-drv-nvidia-cuda xorg-x11-drv-nvidia-power vulkan xorg-x11-drv-nvidia-cuda-libs libva-nvidia-driver.{i686,x86_64} libva-utils vdpauinfo -y
-	grubby --update-kernel=ALL --args='nvidia-drm.modeset=1'
+	dnf install akmod-nvidia xorg-x11-drv-nvidia-cuda libva-nvidia-driver.{i686,x86_64} -y
 fi
+
+# Clear dnf cache
+dnf clean all
+dnf4 clean all
 
 # Remove RPMFusion setup from autostart
 rm "$PWD/.config/autostart/rpmfusion-setup.desktop"
