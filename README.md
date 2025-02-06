@@ -2,9 +2,9 @@
 
 ## :warning: Only works with the latest version of Fedora Workstation with GNOME
 
-### :warning: Enable Third Party Repo during first setup
-
 ## Install instruction
+
+### :warning: Enable Third Party Repo during first setup
 
 ```
 git clone https://github.com/Fail-gh/Fedora-Setup-Script.git
