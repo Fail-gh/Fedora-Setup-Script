@@ -17,10 +17,10 @@ sed -i 's|BTRFS_SCRUB_MOUNTPOINTS="/"|BTRFS_SCRUB_MOUNTPOINTS="/:/home"|g' "/etc
 snapper create-config /
 snapper set-config NUMBER_LIMIT=5 TIMELINE_CREATE=no
 
-# Enable and start timers
+# Enable snapper timers
 systemctl disable snapper-timeline.timer
 systemctl enable --now snapper-boot.timer
-systemctl enable --now snapper-cleanup.timer
+systemctl enable snapper-cleanup.timer
 
 # Add RPMFusion repositories
 dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
