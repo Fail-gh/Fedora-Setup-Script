@@ -16,7 +16,7 @@ systemctl disable snapper-timeline.timer
 systemctl enable --now snapper-boot.timer
 systemctl enable snapper-cleanup.timer
 
-# Add feedback when entering the sudo password
+# Show feedback when entering sudo password
 if ! grep -q pwfeedback /etc/sudoers
 then
 	echo -e "\n# Enables visual feedback (displaying asterisks) when entering a password\nDefaults pwfeedback" >> /etc/sudoers
