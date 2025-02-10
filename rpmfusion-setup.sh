@@ -1,11 +1,5 @@
 #!/bin/sudo bash
 
-# Add feedback when entering the sudo password
-if ! grep -q pwfeedback /etc/sudoers
-then
-	echo -e "\n# Enables visual feedback (displaying asterisks) when entering a password\nDefaults pwfeedback" >> /etc/sudoers
-fi
-
 # Install BTRFS Assistant
 dnf install btrfs-assistant -y
 
@@ -21,6 +15,12 @@ snapper set-config NUMBER_LIMIT=5 TIMELINE_CREATE=no
 systemctl disable snapper-timeline.timer
 systemctl enable --now snapper-boot.timer
 systemctl enable snapper-cleanup.timer
+
+# Add feedback when entering the sudo password
+if ! grep -q pwfeedback /etc/sudoers
+then
+	echo -e "\n# Enables visual feedback (displaying asterisks) when entering a password\nDefaults pwfeedback" >> /etc/sudoers
+fi
 
 # Add RPMFusion repositories
 dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
