@@ -13,13 +13,9 @@ dnf install btrfs-assistant -y
 sed -i 's|BTRFS_BALANCE_MOUNTPOINTS="/"|BTRFS_BALANCE_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
 sed -i 's|BTRFS_SCRUB_MOUNTPOINTS="/"|BTRFS_SCRUB_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
 
-# Configure snapshot of home
-snapper -c home create-config /home
-snapper -c home set-config NUMBER_LIMIT=5 NUMBER_LIMIT_IMPORTANT=1 TIMELINE_CREATE=no
-
 # Configure snapshot of root
 snapper create-config /
-snapper set-config NUMBER_LIMIT=5 NUMBER_LIMIT_IMPORTANT=1 TIMELINE_CREATE=no
+snapper set-config NUMBER_LIMIT=5 TIMELINE_CREATE=no
 
 # Enable and start timers
 systemctl disable snapper-timeline.timer
