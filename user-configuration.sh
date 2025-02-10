@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# Install GNOME Tweaks, Extension Manager, Menu Libre, and Gear Lever
-pkcon install gnome-tweaks -y
-
-# Install additional tools using Flatpak
+# Install Extension Manager, Flatseal and Gear Lever using Flatpak
 flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal -y
 
 # Check if LUKS encrypted partitions and TPM are available

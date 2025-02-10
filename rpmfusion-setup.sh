@@ -242,18 +242,6 @@ then
 		sleep 1
 		reboot=$(systemd-inhibit | grep akmods)
 	done
-
-	# Check secure boot status
-	secure_boot=$(mokutil --sb-state | cut -d' ' -f2)
-
-	if [[ "$secure_boot" == "enabled" ]]
-	then
-		mv "$PWD/.config/autostart/user-configuration" "$PWD/.config/autostart/user-configuration.desktop"
-
-		gnome-software --details-pkg=xorg-x11-drv-nvidia
-
-		zenity --progress --no-cancel --pulsate --text="Enable NVIDIA driver in GNOME Software"
-	fi
 fi
 
 mv "$PWD/.config/autostart/user-configuration" "$PWD/.config/autostart/user-configuration.desktop"
