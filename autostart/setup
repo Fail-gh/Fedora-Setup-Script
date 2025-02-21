@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Start Fedora setup script
+Name=RPM Fusion
 Type=Application
 Exec=HOME/setup.sh
 Terminal=true

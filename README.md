@@ -11,9 +11,9 @@ git clone https://github.com/Fail-gh/Fedora-Setup-Script.git
 
 cd Fedora-Setup-Script
 
-chmod +x setup.sh
+chmod +x update.sh
 
-./setup.sh
+./update.sh
 ```
 
 ## :warning: Install Hardware Accelerated Codec for Intel Haswell (4 gen, 2013 or older)

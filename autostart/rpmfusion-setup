@@ -1,5 +1,0 @@
-[Desktop Entry]
-Name=RPM Fusion
-Type=Application
-Exec=HOME/rpmfusion-setup.sh
-Terminal=true

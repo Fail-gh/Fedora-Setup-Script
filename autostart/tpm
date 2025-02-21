@@ -1,5 +1,5 @@
 [Desktop Entry]
 Name=User Configuration
 Type=Application
-Exec=HOME/user-configuration.sh
+Exec=HOME/tpm.sh
 Terminal=true
