@@ -1,6 +1,6 @@
 #!/bin/sudo bash
 
-# Install BTRFS Assistant
+# Install BTRFS Assistant for GUI BTRFS management
 dnf install btrfs-assistant -y
 
 # Auto BTRFS maintenance configuration
@@ -15,6 +15,9 @@ snapper set-config NUMBER_LIMIT=5 TIMELINE_CREATE=no
 systemctl disable snapper-timeline.timer
 systemctl enable --now snapper-boot.timer
 systemctl enable snapper-cleanup.timer
+
+# Install SELinux Troubleshooter to analyze and resolve AVC denials
+dnf install sealert -y
 
 # Show feedback when entering sudo password
 if ! grep -q pwfeedback /etc/sudoers
