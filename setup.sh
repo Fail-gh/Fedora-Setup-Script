@@ -17,7 +17,7 @@ systemctl enable --now snapper-boot.timer
 systemctl enable snapper-cleanup.timer
 
 # Install SELinux Troubleshooter to analyze and resolve AVC denials
-dnf install sealert -y
+dnf install setroubleshoot -y
 
 # Show feedback when entering sudo password
 if ! grep -q pwfeedback /etc/sudoers
