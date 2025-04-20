@@ -32,13 +32,13 @@ dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(r
 dnf config-manager setopt fedora-cisco-openh264.enabled=1
 
 # Enable users to install packages using Gnome Software or similar (Only GUI packages)
-dnf4 update @core -y
+dnf install rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data -y
 
 # Switch to full ffpmeg
 dnf swap ffmpeg-free ffmpeg --allowerasing -y
 
 # Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
-dnf4 update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
+dnf install gstreamer1-plugins-bad-freeworld gstreamer1-plugins-ugly libheif-freeworld pipewire-codec-aptx -y
 
 # Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
 dnf install intel-media-driver -y
@@ -67,7 +67,6 @@ dnf swap mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686 -y
 
 # Clear dnf cache
 dnf clean all
-dnf4 clean all
 
 # Install Extension Manager, Flatseal and Gear Lever using Flatpak
 flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal -y

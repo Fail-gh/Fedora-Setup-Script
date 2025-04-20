@@ -18,7 +18,6 @@ chmod +x ./setup.sh
 chmod +x ./tpm.sh
 
 #Update system
-dnf clean all
 pkcon refresh force
 while [ $? -ne 0 ]
 do
