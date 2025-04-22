@@ -1,7 +1,15 @@
 #!/bin/sudo bash
 
+dnf-install () {
+	sudo dnf install -y $1 $2
+}
+
+dnf-swap () {
+	sudo dnf swap -y $1 $2
+}
+
 # Install BTRFS Assistant for GUI BTRFS management
-dnf install btrfs-assistant -y
+dnf-install "btrfs-assistant"
 
 # Auto BTRFS maintenance configuration
 sed -i 's|BTRFS_BALANCE_MOUNTPOINTS="/"|BTRFS_BALANCE_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
@@ -17,59 +25,61 @@ systemctl enable --now snapper-boot.timer
 systemctl enable snapper-cleanup.timer
 
 # Install SELinux Troubleshooter to analyze and resolve AVC denials
-dnf install setroubleshoot -y
+dnf-install "setroubleshoot"
 
-# Show feedback when entering sudo password
-if ! grep -q pwfeedback /etc/sudoers
-then
-	echo -e "\n# Enables visual feedback (displaying asterisks) when entering a password\nDefaults pwfeedback" >> /etc/sudoers
-fi
+# Enable Fedora Third-Party Repositories
+fedora-third-party enable
+
+# Disable redundant and unnecessary repositories
+dnf copr disable copr.fedorainfracloud.org/phracek/PyCharm
+sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-steam.repo"
+sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo"
+
+# Disable Fedora Flatpaks
+flatpak remote-modify --disable fedora
 
 # Add RPMFusion repositories
-dnf install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm -y
-
-# Enable OpenH264 for RPM Fusion
-dnf config-manager setopt fedora-cisco-openh264.enabled=1
+dnf-install "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 
 # Enable users to install packages using Gnome Software or similar (Only GUI packages)
-dnf install rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data -y
+dnf update -y @core
 
 # Switch to full ffpmeg
-dnf swap ffmpeg-free ffmpeg --allowerasing -y
+dnf-swap "--allowerasing" "ffmpeg-free ffmpeg"
 
 # Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
-dnf install gstreamer1-plugins-bad-freeworld gstreamer1-plugins-ugly libheif-freeworld pipewire-codec-aptx -y
+dnf update --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin @multimedia
 
 # Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
-dnf install intel-media-driver -y
+dnf-install "intel-media-driver"
 
 # Install RPMFusion Free Tainted repo
-dnf install rpmfusion-free-release-tainted -y
-dnf install libdvdcss -y
+dnf-install "rpmfusion-free-release-tainted"
+dnf-install "libdvdcss"
 
 # Install RPMFusion NonFree Tainted repo
-dnf install rpmfusion-nonfree-release-tainted -y
-dnf --repo=rpmfusion-nonfree-tainted install "*-firmware" -y
+dnf-install "rpmfusion-nonfree-release-tainted"
+dnf-install "--repo=rpmfusion-nonfree-tainted" "*-firmware"
 
 # NVIDIA driver installation if NVIDIA hardware is detected
 nvidia=$(lspci | grep NVIDIA)
 
 if [ -n "$nvidia" ]
 then
-	dnf install akmod-nvidia xorg-x11-drv-nvidia-cuda libva-nvidia-driver.{i686,x86_64} -y
+	dnf-install "akmod-nvidia xorg-x11-drv-nvidia-cuda libva-nvidia-driver.i686 libva-nvidia-driver.x86_64"
 fi
 
 # Install mesa Hardware Accelerated Codec
-dnf swap mesa-va-drivers mesa-va-drivers-freeworld -y
-dnf swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld -y
-dnf swap mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686 -y
-dnf swap mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686 -y
+dnf-swap "mesa-va-drivers mesa-va-drivers-freeworld"
+dnf-swap "mesa-vdpau-drivers mesa-vdpau-drivers-freeworld"
+dnf-swap "mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686"
+dnf-swap "mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686"
 
 # Clear dnf cache
 dnf clean all
 
 # Install Extension Manager, Flatseal and Gear Lever using Flatpak
-flatpak install flathub com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal -y
+flatpak install -y com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal
 
 # Remove RPMFusion setup from autostart
 rm "$PWD/.config/autostart/setup.desktop"
