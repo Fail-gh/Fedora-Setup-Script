@@ -3,45 +3,45 @@
 dnf-install () {
 	dnf install -y $1 $2
 
-	if [ $? -ne 0 ]
-	then
+	while [ $? -ne 0 ]
+	do
 		echo -e "\n\nRetrying in 5 seconds...\n\n"
 		sleep 5
-		dnf-install $1 $2
-	fi
+		dnf install -y $1 $2
+	done
 }
 
 dnf-swap () {
 	dnf swap -y $1 $2
 
-	if [ $? -ne 0 ]
-	then
+	while [ $? -ne 0 ]
+	do
 		echo -e "\n\nRetrying in 5 seconds...\n\n"
 		sleep 5
-		dnf-swap $1 $2
-	fi
+		dnf swap -y $1 $2
+	done
 }
 
 dnf-upgrade () {
 	dnf upgrade -y $1 $2 $3
 
-	if [ $? -ne 0 ]
-	then
+	while [ $? -ne 0 ]
+	do
 		echo -e "\n\nRetrying in 5 seconds...\n\n"
 		sleep 5
-		dnf-upgrade $1 $2 $3
-	fi
+		dnf upgrade -y $1 $2 $3
+	done
 }
 
 flatpak-install () {
 	flatpak install -y $1
 
-	if [ $? -ne 0 ]
-	then
+	while [ $? -ne 0 ]
+	do
 		echo -e "\n\nRetrying in 5 seconds...\n\n"
 		sleep 5
-		flatpak-install $1
-	fi
+		flatpak install -y $1
+	done
 }
 
 # Install BTRFS Assistant for GUI BTRFS management
