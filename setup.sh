@@ -1,46 +1,46 @@
-#!/bin/sudo bash
+#!/bin/bash
 
 dnf-install () {
-	dnf install -y $1 $2
+	sudo dnf install -y $1 $2
 
 	while [ $? -ne 0 ]
 	do
 		echo -e "\n\nRetrying in 5 seconds...\n\n"
 		sleep 5
-		dnf install -y $1 $2
+		sudo dnf install -y $1 $2
 	done
 }
 
 dnf-swap () {
-	dnf swap -y $1 $2
+	sudo dnf swap -y $1 $2
 
 	while [ $? -ne 0 ]
 	do
 		echo -e "\n\nRetrying in 5 seconds...\n\n"
 		sleep 5
-		dnf swap -y $1 $2
+		sudo dnf swap -y $1 $2
 	done
 }
 
 dnf-upgrade () {
-	dnf upgrade -y $1 $2 $3
+	sudo dnf upgrade -y $1 $2 $3
 
 	while [ $? -ne 0 ]
 	do
 		echo -e "\n\nRetrying in 5 seconds...\n\n"
 		sleep 5
-		dnf upgrade -y $1 $2 $3
+		sudo dnf upgrade -y $1 $2 $3
 	done
 }
 
 flatpak-install () {
-	flatpak install -y $1
+	sudo flatpak install -y $1
 
 	while [ $? -ne 0 ]
 	do
 		echo -e "\n\nRetrying in 5 seconds...\n\n"
 		sleep 5
-		flatpak install -y $1
+		sudo flatpak install -y $1
 	done
 }
 
@@ -48,31 +48,31 @@ flatpak-install () {
 dnf-install "btrfs-assistant"
 
 # Auto BTRFS maintenance configuration
-sed -i 's|BTRFS_BALANCE_MOUNTPOINTS="/"|BTRFS_BALANCE_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
-sed -i 's|BTRFS_SCRUB_MOUNTPOINTS="/"|BTRFS_SCRUB_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
+sudo sed -i 's|BTRFS_BALANCE_MOUNTPOINTS="/"|BTRFS_BALANCE_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
+sudo sed -i 's|BTRFS_SCRUB_MOUNTPOINTS="/"|BTRFS_SCRUB_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
 
 # Configure snapshot of root
-snapper create-config /
-snapper set-config NUMBER_LIMIT=5 TIMELINE_CREATE=no
+sudo snapper create-config /
+sudo snapper set-config NUMBER_LIMIT=5 TIMELINE_CREATE=no
 
 # Enable snapper timers
-systemctl disable snapper-timeline.timer
-systemctl enable --now snapper-boot.timer
-systemctl enable snapper-cleanup.timer
+sudo systemctl disable snapper-timeline.timer
+sudo systemctl enable --now snapper-boot.timer
+sudo systemctl enable snapper-cleanup.timer
 
 # Install SELinux Troubleshooter to analyze and resolve AVC denials
 dnf-install "setroubleshoot"
 
 # Enable Fedora Third-Party Repositories
-fedora-third-party enable
+sudo fedora-third-party enable
 
 # Disable redundant and unnecessary repositories
-dnf copr disable copr.fedorainfracloud.org/phracek/PyCharm
-sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-steam.repo"
-sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo"
+sudo dnf copr disable copr.fedorainfracloud.org/phracek/PyCharm
+sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-steam.repo"
+sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo"
 
 # Disable Fedora Flatpaks
-flatpak remote-modify --disable fedora
+sudo flatpak remote-modify --disable fedora
 
 # Add RPMFusion repositories
 dnf-install "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
@@ -113,6 +113,7 @@ dnf-swap "mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686"
 
 # Clear dnf cache
 dnf clean all
+sudo dnf clean all
 
 # Install Extension Manager, Flatseal and Gear Lever using Flatpak
 flatpak-install "com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal"
