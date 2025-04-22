@@ -1,10 +1,6 @@
-# Fedora-Setup-Script
-
-## :warning: Only works with the latest version of Fedora Workstation with GNOME
+# Fedora Setup Script
 
 ## Install instruction
-
-### :warning: Enable Third Party Repo during first setup
 
 ```
 git clone https://github.com/Fail-gh/Fedora-Setup-Script.git
@@ -16,7 +12,7 @@ chmod +x update.sh
 ./update.sh
 ```
 
-## :warning: Install Hardware Accelerated Codec for Intel Haswell (4 gen, 2013 or older)
+## Install Hardware Accelerated Codec for Intel Haswell (4 gen, 2013 or older)
 
 To enable hardware decoding on Intel processors, install the appropriate driver:
 
