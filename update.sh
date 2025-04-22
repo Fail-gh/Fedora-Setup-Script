@@ -1,5 +1,16 @@
 #!/bin/bash
 
+fun () {
+	$1
+
+	while [ $? -ne 0 ]
+	do
+		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		sleep 5
+		$1
+	done
+}
+
 # Set current folder to autostart
 # Using "HOME" as a placeholder for replacement with the current working directory
 for file in ./autostart/*
@@ -18,21 +29,8 @@ chmod +x ./setup.sh
 chmod +x ./tpm.sh
 
 #Update system
-pkcon refresh force
-while [ $? -ne 0 ]
-do
-	echo -e "\nRetrying in 5 seconds...\n"
-	sleep 5
-	pkcon refresh force
-done
-
-pkcon update --only-download
-while [[ $? -ne 0 && $? -ne 5 ]]
-do
-	echo -e "\nRetrying in 5 seconds...\n"
-	sleep 5
-	pkcon update --only-download
-done
+fun "pkcon refresh force"
+fun "pkcon update --only-download"
 
 # If the update was successful, trigger an offline update for the next reboot
 if [ $? -eq 0 ]

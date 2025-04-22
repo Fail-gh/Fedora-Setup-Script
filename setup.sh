@@ -1,11 +1,47 @@
 #!/bin/sudo bash
 
 dnf-install () {
-	sudo dnf install -y $1 $2
+	dnf install -y $1 $2
+
+	if [ $? -ne 0 ]
+	then
+		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		sleep 5
+		dnf-install $1 $2
+	fi
 }
 
 dnf-swap () {
-	sudo dnf swap -y $1 $2
+	dnf swap -y $1 $2
+
+	if [ $? -ne 0 ]
+	then
+		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		sleep 5
+		dnf-swap $1 $2
+	fi
+}
+
+dnf-upgrade () {
+	dnf upgrade -y $1 $2 $3
+
+	if [ $? -ne 0 ]
+	then
+		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		sleep 5
+		dnf-upgrade $1 $2 $3
+	fi
+}
+
+flatpak-install () {
+	flatpak install -y $1
+
+	if [ $? -ne 0 ]
+	then
+		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		sleep 5
+		flatpak-install $1
+	fi
 }
 
 # Install BTRFS Assistant for GUI BTRFS management
@@ -42,18 +78,15 @@ flatpak remote-modify --disable fedora
 dnf-install "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 
 # Enable users to install packages using Gnome Software or similar (Only GUI packages)
-dnf update -y @core
-
-# Switch to full ffpmeg
-dnf-swap "--allowerasing" "ffmpeg-free ffmpeg"
+dnf-upgrade "@core"
 
 # Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
-dnf update --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin @multimedia
+dnf-upgrade "--setopt=install_weak_deps=False" "--exclude=PackageKit-gstreamer-plugin" "@multimedia"
 
 # Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
 dnf-install "intel-media-driver"
 
-# Install RPMFusion Free Tainted repo
+# Install RPMOther exit codes could be returned by the specific command itself, see its documentation for Fusion Free Tainted repo
 dnf-install "rpmfusion-free-release-tainted"
 dnf-install "libdvdcss"
 
@@ -69,6 +102,9 @@ then
 	dnf-install "akmod-nvidia xorg-x11-drv-nvidia-cuda libva-nvidia-driver.i686 libva-nvidia-driver.x86_64"
 fi
 
+# Switch to full ffpmeg
+dnf-swap "--allowerasing" "ffmpeg-free ffmpeg"
+
 # Install mesa Hardware Accelerated Codec
 dnf-swap "mesa-va-drivers mesa-va-drivers-freeworld"
 dnf-swap "mesa-vdpau-drivers mesa-vdpau-drivers-freeworld"
@@ -79,7 +115,7 @@ dnf-swap "mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686"
 dnf clean all
 
 # Install Extension Manager, Flatseal and Gear Lever using Flatpak
-flatpak install -y com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal
+flatpak-install "com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal"
 
 # Remove RPMFusion setup from autostart
 rm "$PWD/.config/autostart/setup.desktop"
