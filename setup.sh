@@ -34,13 +34,24 @@ dnf-upgrade () {
 }
 
 flatpak-install () {
-	sudo flatpak install -y $1
+	flatpak install -y $1
 
 	while [ $? -ne 0 ]
 	do
 		echo -e "\n\nRetrying in 5 seconds...\n\n"
 		sleep 5
-		sudo flatpak install -y $1
+		flatpak install -y $1
+	done
+}
+
+dnf-remove () {
+	sudo dnf remove -y $1
+
+	while [ $? -ne 0 ]
+	do
+		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		sleep 5
+		sudo dnf remove -y $1
 	done
 }
 
@@ -117,6 +128,24 @@ sudo dnf clean all
 
 # Install Extension Manager, Flatseal and Gear Lever using Flatpak
 flatpak-install "com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal"
+
+# Replace RPMs with Flatpaks
+dnf-remove "mediawriter"
+flatpak-install "org.fedoraproject.MediaWriter"
+
+dnf-remove "gnome-boxes"
+flatpak-install "org.gnome.Boxes"
+
+dnf-remove "@libreoffice"
+flatpak-install "org.libreoffice.LibreOffice"
+
+dnf-remove "firefox"
+rm -r .mozilla
+flatpak-install "org.mozilla.firefox"
+
+# Replace Rhythmbox with GNOME default apps
+dnf-remove "rhythmbox"
+dnf-install "decibels gnome-music"
 
 # Remove RPMFusion setup from autostart
 rm "$PWD/.config/autostart/setup.desktop"
