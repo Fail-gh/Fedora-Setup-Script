@@ -1,9 +1,9 @@
 #!/bin/bash
 
-system-update () {
+pkcon-update () {
 	$1
 
-	while [ $? -ne 0 ]
+	while [[ $? -ne 0 && $? -ne 5 ]]
 	do
 		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
@@ -31,8 +31,8 @@ chmod +x ./setup.sh
 chmod +x ./tpm.sh
 
 #Update system
-system-update "pkcon refresh force"
-system-update "pkcon update --only-download"
+pkcon-update "pkcon refresh force"
+pkcon-update "pkcon update --only-download"
 
 # If the update was successful, trigger an offline update for the next reboot
 if [ $? -eq 0 ]
