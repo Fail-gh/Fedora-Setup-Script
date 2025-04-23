@@ -156,7 +156,7 @@ dnf-remove "@libreoffice"
 flatpak-install "org.libreoffice.LibreOffice"
 
 dnf-remove "firefox"
-rm -r .mozilla
+rm -r $HOME/.mozilla
 flatpak-install "org.mozilla.firefox"
 
 # Replace Rhythmbox with GNOME default apps
