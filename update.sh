@@ -1,6 +1,6 @@
 #!/bin/bash
 
-fun () {
+system-update () {
 	$1
 
 	while [ $? -ne 0 ]
@@ -9,6 +9,8 @@ fun () {
 		sleep 5
 		$1
 	done
+
+	echo
 }
 
 # Set current folder to autostart
@@ -29,8 +31,8 @@ chmod +x ./setup.sh
 chmod +x ./tpm.sh
 
 #Update system
-fun "pkcon refresh force"
-fun "pkcon update --only-download"
+system-update "pkcon refresh force"
+system-update "pkcon update --only-download"
 
 # If the update was successful, trigger an offline update for the next reboot
 if [ $? -eq 0 ]

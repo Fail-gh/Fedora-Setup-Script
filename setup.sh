@@ -9,6 +9,8 @@ dnf-install () {
 		sleep 5
 		sudo dnf install -y $1 $2
 	done
+
+	echo
 }
 
 dnf-swap () {
@@ -20,6 +22,8 @@ dnf-swap () {
 		sleep 5
 		sudo dnf swap -y $1 $2
 	done
+
+	echo
 }
 
 dnf-upgrade () {
@@ -31,6 +35,8 @@ dnf-upgrade () {
 		sleep 5
 		sudo dnf upgrade -y $1 $2 $3
 	done
+
+	echo
 }
 
 flatpak-install () {
@@ -42,6 +48,8 @@ flatpak-install () {
 		sleep 5
 		flatpak install -y $1
 	done
+
+	echo
 }
 
 dnf-remove () {
@@ -53,6 +61,8 @@ dnf-remove () {
 		sleep 5
 		sudo dnf remove -y $1
 	done
+
+	echo -en "\n"
 }
 
 # Install BTRFS Assistant for GUI BTRFS management
@@ -68,8 +78,11 @@ sudo snapper set-config NUMBER_LIMIT=5 TIMELINE_CREATE=no
 
 # Enable snapper timers
 sudo systemctl disable snapper-timeline.timer
+echo
 sudo systemctl enable --now snapper-boot.timer
+echo
 sudo systemctl enable snapper-cleanup.timer
+echo
 
 # Install SELinux Troubleshooter to analyze and resolve AVC denials
 dnf-install "setroubleshoot"
@@ -79,6 +92,7 @@ sudo fedora-third-party enable
 
 # Disable redundant and unnecessary repositories
 sudo dnf copr disable copr.fedorainfracloud.org/phracek/PyCharm
+echo
 sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-steam.repo"
 sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo"
 
@@ -124,7 +138,9 @@ dnf-swap "mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686"
 
 # Clear dnf cache
 dnf clean all
+echo
 sudo dnf clean all
+echo
 
 # Install Extension Manager, Flatseal and Gear Lever using Flatpak
 flatpak-install "com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal"
