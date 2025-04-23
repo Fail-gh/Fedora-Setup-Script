@@ -166,6 +166,12 @@ dnf-install "decibels gnome-music"
 # Install AppIndicator and KStatusNotifierItem Support
 dnf-install "gnome-shell-extension-appindicator"
 
+# Move Btrfs Assistant and SELinux Troubleshooter to "System" folder
+gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/System/ apps "['org.gnome.baobab.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.freedesktop.MalcontentControl.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'org.gnome.SystemMonitor.desktop', 'btrfs-assistant.desktop', 'setroubleshoot.desktop']"
+
+# Move Charachter to "Utilities" folder
+gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/Utilities/ apps "['org.gnome.Connections.desktop', 'org.gnome.Evince.desktop', 'org.gnome.font-viewer.desktop', 'org.gnome.Loupe.desktop', 'org.gnome.Characters.desktop']"
+
 # Remove RPMFusion setup from autostart
 rm "$PWD/.config/autostart/setup.desktop"
 

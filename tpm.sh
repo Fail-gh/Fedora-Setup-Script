@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Enable AppIndicator and KStatusNotifierItem Support
+gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com
+
 # Check if LUKS encrypted partitions and TPM are available
 luks=$(lsblk | grep luks)
 tpm=$(systemd-cryptenroll --tpm2-device=list | grep tpm)
