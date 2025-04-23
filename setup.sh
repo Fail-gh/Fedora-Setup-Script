@@ -136,29 +136,20 @@ dnf-swap "mesa-vdpau-drivers mesa-vdpau-drivers-freeworld"
 dnf-swap "mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686"
 dnf-swap "mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686"
 
-# Install Extension Manager, Flatseal and Gear Lever using Flatpak
-flatpak-install "com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal"
-
-# Replace RPMs with Flatpaks
-dnf-remove "mediawriter"
-flatpak-install "org.fedoraproject.MediaWriter"
-
-dnf-remove "gnome-boxes"
-flatpak-install "org.gnome.Boxes"
-
-dnf-remove "@libreoffice"
-flatpak-install "org.libreoffice.LibreOffice"
-
-dnf-remove "firefox"
-rm -r $HOME/.mozilla
-flatpak-install "org.mozilla.firefox"
-
 # Replace Rhythmbox with GNOME default apps
 dnf-remove "rhythmbox"
 dnf-install "decibels gnome-music"
 
 # Install AppIndicator and KStatusNotifierItem Support
 dnf-install "gnome-shell-extension-appindicator"
+
+# Replace RPMs with Flatpaks
+dnf-remove "mediawriter gnome-boxes @libreoffice firefox"
+rm -r $HOME/.mozilla
+flatpak-install "org.fedoraproject.MediaWriter org.gnome.Boxes org.libreoffice.LibreOffice org.mozilla.firefox"
+
+# Install Extension Manager, Flatseal and Gear Lever using Flatpak
+flatpak-install "com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal"
 
 # Clear dnf cache
 dnf clean all
