@@ -136,12 +136,6 @@ dnf-swap "mesa-vdpau-drivers mesa-vdpau-drivers-freeworld"
 dnf-swap "mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686"
 dnf-swap "mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686"
 
-# Clear dnf cache
-dnf clean all
-echo
-sudo dnf clean all
-echo
-
 # Install Extension Manager, Flatseal and Gear Lever using Flatpak
 flatpak-install "com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal"
 
@@ -165,6 +159,12 @@ dnf-install "decibels gnome-music"
 
 # Install AppIndicator and KStatusNotifierItem Support
 dnf-install "gnome-shell-extension-appindicator"
+
+# Clear dnf cache
+dnf clean all
+echo
+sudo dnf clean all
+echo
 
 # Move Btrfs Assistant and SELinux Troubleshooter to "System" folder
 gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/System/ apps "['org.gnome.baobab.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.freedesktop.MalcontentControl.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'org.gnome.SystemMonitor.desktop', 'btrfs-assistant.desktop', 'setroubleshoot.desktop']"
