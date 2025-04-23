@@ -5,7 +5,7 @@ fun () {
 
 	while [ $? -ne 0 ]
 	do
-		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
 		$1
 	done

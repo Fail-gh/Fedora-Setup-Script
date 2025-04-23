@@ -5,7 +5,7 @@ dnf-install () {
 
 	while [ $? -ne 0 ]
 	do
-		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
 		sudo dnf install -y $1 $2
 	done
@@ -16,7 +16,7 @@ dnf-swap () {
 
 	while [ $? -ne 0 ]
 	do
-		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
 		sudo dnf swap -y $1 $2
 	done
@@ -27,7 +27,7 @@ dnf-upgrade () {
 
 	while [ $? -ne 0 ]
 	do
-		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
 		sudo dnf upgrade -y $1 $2 $3
 	done
@@ -38,7 +38,7 @@ flatpak-install () {
 
 	while [ $? -ne 0 ]
 	do
-		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
 		flatpak install -y $1
 	done
@@ -49,7 +49,7 @@ dnf-remove () {
 
 	while [ $? -ne 0 ]
 	do
-		echo -e "\n\nRetrying in 5 seconds...\n\n"
+		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
 		sudo dnf remove -y $1
 	done
@@ -146,6 +146,9 @@ flatpak-install "org.mozilla.firefox"
 # Replace Rhythmbox with GNOME default apps
 dnf-remove "rhythmbox"
 dnf-install "decibels gnome-music"
+
+# Install AppIndicator and KStatusNotifierItem Support
+dnf-install "gnome-shell-extension-appindicator"
 
 # Remove RPMFusion setup from autostart
 rm "$PWD/.config/autostart/setup.desktop"
