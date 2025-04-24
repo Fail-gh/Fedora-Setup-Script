@@ -1,13 +1,13 @@
 #!/bin/bash
 
 dnf-manager () {
-	sudo dnf $1 -y $2 $3
+	sudo dnf $1 -y $2 $3 $4
 
 	while [ $? -ne 0 ]
 	do
 		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
-		sudo dnf $1 -y $2 $3
+		sudo dnf $1 -y $2 $3 $4
 	done
 
 	echo
@@ -25,6 +25,18 @@ flatpak-install () {
 
 	echo
 }
+
+# Enable Fedora Third-Party Repositories
+sudo fedora-third-party enable
+
+# Disable Fedora Flatpaks
+sudo flatpak remote-modify --disable fedora
+
+# Disable redundant and unnecessary repositories
+sudo dnf copr disable copr.fedorainfracloud.org/phracek/PyCharm
+echo
+sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-steam.repo"
+sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo"
 
 # Install BTRFS Assistant for GUI BTRFS management
 dnf-manager "install" "btrfs-assistant"
@@ -47,18 +59,6 @@ echo
 
 # Install SELinux Troubleshooter to analyze and resolve AVC denials
 dnf-manager "install" "setroubleshoot"
-
-# Enable Fedora Third-Party Repositories
-sudo fedora-third-party enable
-
-# Disable redundant and unnecessary repositories
-sudo dnf copr disable copr.fedorainfracloud.org/phracek/PyCharm
-echo
-sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-steam.repo"
-sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo"
-
-# Disable Fedora Flatpaks
-sudo flatpak remote-modify --disable fedora
 
 # Add RPMFusion repositories
 dnf-manager "install" "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
