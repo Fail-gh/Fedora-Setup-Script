@@ -51,7 +51,7 @@ This script automates post-installation tasks on **Fedora Workstation**:
 
 ## <a id="which-fedora-versions-are-supported"></a> :computer: Which Fedora versions are supported?
 
-The script is intended for the **latest version of Fedora Workstation** using the **GNOME** desktop environment.
+The script is intended for the **latest version of Fedora Workstation** **(Fedora Linux 42)** using the **GNOME** desktop environment.
 
 ---
 
