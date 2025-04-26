@@ -70,7 +70,13 @@ dnf-manager "upgrade" "@core"
 dnf-manager "upgrade" "--setopt=install_weak_deps=False" "--exclude=PackageKit-gstreamer-plugin" "@multimedia"
 
 # Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
-dnf-manager "install" "intel-media-driver"
+intel_cpu=$(lscpu | grep Intel)
+intel_gpu=$(lspci | grep VGA | grep Intel)
+
+if [[ -n "$intel_cpu" || -n "$intel_gpu" ]]
+then
+	dnf-manager "install" "intel-media-driver"
+fi
 
 # Install RPMOther exit codes could be returned by the specific command itself, see its documentation for Fusion Free Tainted repo
 dnf-manager "install" "rpmfusion-free-release-tainted"
