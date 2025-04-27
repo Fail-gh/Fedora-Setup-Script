@@ -88,6 +88,27 @@ then
 	dnf-manager "install" "akmod-nvidia xorg-x11-drv-nvidia-cuda libva-nvidia-driver.i686 libva-nvidia-driver.x86_64"
 fi
 
+# Install compute runtime if intel gpu is detected
+intel_cpu=$(lscpu | grep Intel)
+intel_gpu=$(lspci | grep VGA | grep Intel)
+
+if [[ -n "$intel_cpu" || -n "$intel_gpu" ]]
+then
+
+	dnf-manager "install" "intel-compute-runtime"
+
+fi
+
+# Install ROCm runtime if AMD gpu is detected *NOT WORKING (DEPENDENCY ERROR)*
+amd_gpu=$(lspci | grep VGA | grep AMD)
+
+if [ -n "$amd_gpu" ]
+then
+
+	dnf-manager "install" "rocm-opencl rocm-hip"
+
+fi
+
 # Switch to full ffpmeg
 dnf-manager "swap" "--allowerasing" "ffmpeg-free ffmpeg"
 
