@@ -97,7 +97,7 @@ then
 	dnf-manager "install" "intel-compute-runtime"
 fi
 
-# Install ROCm runtime if AMD gpu is detected *NOT WORKING (DEPENDENCY ERROR)*
+# Install ROCm runtime if AMD gpu is detected *NOT WORKING (DEPENDENCY ERROR)* *optional package* amdsmi, rocminfo, rocm-clinfo
 amd_gpu=$(lspci | grep VGA | grep AMD)
 
 if [ -n "$amd_gpu" ]
