@@ -94,9 +94,7 @@ intel_gpu=$(lspci | grep VGA | grep Intel)
 
 if [[ -n "$intel_cpu" || -n "$intel_gpu" ]]
 then
-
 	dnf-manager "install" "intel-compute-runtime"
-
 fi
 
 # Install ROCm runtime if AMD gpu is detected *NOT WORKING (DEPENDENCY ERROR)*
@@ -104,9 +102,7 @@ amd_gpu=$(lspci | grep VGA | grep AMD)
 
 if [ -n "$amd_gpu" ]
 then
-
-	dnf-manager "install" "rocm-opencl rocm-hip"
-
+	dnf-manager "install" "rocm-opencl rocm-hip rocm-core"
 fi
 
 # Switch to full ffpmeg
