@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Enable AppIndicator and KStatusNotifierItem Support
-gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	# Enable AppIndicator and KStatusNotifierItem Support
+	gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com
+fi
 
 # Check if LUKS encrypted partitions and TPM are available
 luks=$(lsblk | grep luks)
