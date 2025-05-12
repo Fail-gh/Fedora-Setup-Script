@@ -94,7 +94,16 @@ intel_gpu=$(lspci | grep VGA | grep Intel)
 
 if [[ -n "$intel_cpu" || -n "$intel_gpu" ]]
 then
-	dnf-manager "install" "intel-compute-runtime"
+	dnf-manager "install" "intel-compute-runtime clinfo"
+
+	OpenCL=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
+	if [ "$OpenCL" -gt 0 ]
+	then
+		dnf-manager "remove" "clinfo"
+	else
+		dnf-manager "remove" "intel-compute-runtime clinfo"
+		dnf-manager "install" "mesa-libOpenCL"
+	fi
 fi
 
 # Install ROCm runtime if AMD gpu is detected
