@@ -96,8 +96,8 @@ if [[ -n "$intel_cpu" || -n "$intel_gpu" ]]
 then
 	dnf-manager "install" "intel-compute-runtime clinfo"
 
-	OpenCL=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
-	if [ "$OpenCL" -gt 0 ]
+	IntelOpenCL=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
+	if [ "$IntelOpenCL" -gt 0 ]
 	then
 		dnf-manager "remove" "clinfo"
 	else
@@ -111,7 +111,16 @@ amd_gpu=$(lspci | grep VGA | grep AMD)
 
 if [ -n "$amd_gpu" ]
 then
-	dnf-manager "install" "rocm-opencl rocm-hip rocm-core"
+	dnf-manager "install" "rocm-opencl rocm-hip rocm-core clinfo"
+
+	AMDOpenCL=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
+	if [ "$AMDOpenCL" -gt 0 ]
+	then
+		dnf-manager "remove" "clinfo"
+	else
+		dnf-manager "remove" "rocm-opencl rocm-hip rocm-core clinfo"
+		dnf-manager "install" "mesa-libOpenCL"
+	fi
 fi
 
 # Switch to full ffpmeg
