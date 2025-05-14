@@ -63,5 +63,5 @@ if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
 	rm $HOME/.config/autostart/gnome-tpm.desktop
 else
-	rm $HOME/.config/autostart/plasma-tpm.desktop
+	rm $HOME/.config/autostart/kde-tpm.desktop
 fi

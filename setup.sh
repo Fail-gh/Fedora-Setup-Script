@@ -159,7 +159,7 @@ if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
 	rm "$PWD/.config/autostart/gnome-setup.desktop"
 else
-	rm "$PWD/.config/autostart/plasma-setup.desktop"
+	rm "$PWD/.config/autostart/kde-setup.desktop"
 fi
 
 if [ -n "$nvidia" ]
@@ -178,7 +178,7 @@ if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
 	mv "$PWD/.config/autostart/gnome-tpm" "$PWD/.config/autostart/gnome-tpm.desktop"
 else
-	mv "$PWD/.config/autostart/plasma-tpm.bak" "$PWD/.config/autostart/plasma-tpm.desktop"
+	mv "$PWD/.config/autostart/kde-tpm.bak" "$PWD/.config/autostart/kde-tpm.desktop"
 fi
 
 # Final reboot

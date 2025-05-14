@@ -28,7 +28,7 @@ if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
 	cp ./autostart/gnome-* "$HOME/.config/autostart/"
 else
-	cp ./autostart/plasma-* "$HOME/.config/autostart/"
+	cp ./autostart/kde-* "$HOME/.config/autostart/"
 fi
 
 # Grant execution permission to all necessary setup scripts
@@ -50,8 +50,8 @@ then
 	rm "$HOME/.config/autostart/gnome-update.desktop"
 	mv "$HOME/.config/autostart/gnome-setup" "$HOME/.config/autostart/gnome-setup.desktop"
 else
-	rm "$HOME/.config/autostart/plasma-update.desktop"
-	mv "$HOME/.config/autostart/plasma-setup.bak" "$HOME/.config/autostart/gnome-setup.desktop"
+	rm "$HOME/.config/autostart/kde-update.desktop"
+	mv "$HOME/.config/autostart/kde-setup.bak" "$HOME/.config/autostart/kde-setup.desktop"
 fi
 
 # Reboot the system
