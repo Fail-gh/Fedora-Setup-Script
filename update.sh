@@ -51,7 +51,7 @@ then
 	mv "$HOME/.config/autostart/gnome-setup" "$HOME/.config/autostart/gnome-setup.desktop"
 else
 	rm "$HOME/.config/autostart/plasma-update.desktop"
-	mv "$HOME/.config/autostart/plasma-setup" "$HOME/.config/autostart/gnome-setup.desktop"
+	mv "$HOME/.config/autostart/plasma-setup.bak" "$HOME/.config/autostart/gnome-setup.desktop"
 fi
 
 # Reboot the system

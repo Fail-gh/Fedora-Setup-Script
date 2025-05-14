@@ -178,7 +178,7 @@ if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
 	mv "$PWD/.config/autostart/gnome-tpm" "$PWD/.config/autostart/gnome-tpm.desktop"
 else
-	mv "$PWD/.config/autostart/plasma-tpm" "$PWD/.config/autostart/plasma-tpm.desktop"
+	mv "$PWD/.config/autostart/plasma-tpm.bak" "$PWD/.config/autostart/plasma-tpm.desktop"
 fi
 
 # Final reboot
