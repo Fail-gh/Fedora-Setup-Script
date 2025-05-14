@@ -94,7 +94,16 @@ intel_gpu=$(lspci | grep VGA | grep Intel)
 
 if [[ -n "$intel_cpu" || -n "$intel_gpu" ]]
 then
-	dnf-manager "install" "intel-compute-runtime"
+	dnf-manager "install" "intel-compute-runtime clinfo"
+
+	IntelOpenCL=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
+	if [ "$IntelOpenCL" -gt 0 ]
+	then
+		dnf-manager "remove" "clinfo"
+	else
+		dnf-manager "remove" "intel-compute-runtime clinfo"
+		dnf-manager "install" "mesa-libOpenCL"
+	fi
 fi
 
 # Install ROCm runtime if AMD gpu is detected
@@ -102,7 +111,16 @@ amd_gpu=$(lspci | grep VGA | grep AMD)
 
 if [ -n "$amd_gpu" ]
 then
-	dnf-manager "install" "rocm-opencl rocm-hip rocm-core"
+	dnf-manager "install" "rocm-opencl rocm-hip rocm-core clinfo"
+
+	AMDOpenCL=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
+	if [ "$AMDOpenCL" -gt 0 ]
+	then
+		dnf-manager "remove" "clinfo"
+	else
+		dnf-manager "remove" "rocm-opencl rocm-hip rocm-core clinfo"
+		dnf-manager "install" "mesa-libOpenCL"
+	fi
 fi
 
 # Switch to full ffpmeg
@@ -129,7 +147,7 @@ then
 fi
 
 # Replace RPMs with Flatpaks
-dnf-manager "remove" "mediawriter @libreoffice firefox"
+dnf-manager "remove" "mediawriter libreoffice-core @libreoffice firefox"
 rm -r $HOME/.mozilla
 flatpak-install "org.fedoraproject.MediaWriter org.libreoffice.LibreOffice org.mozilla.firefox"
 
