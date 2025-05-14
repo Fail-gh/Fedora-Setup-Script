@@ -21,7 +21,7 @@ This replaces the newer driver with one that is compatible with older hardware, 
 
 - [What is this script for?](#what-is-this-script-for)
 - [Which Fedora versions are supported?](#which-fedora-versions-are-supported)
-- [Can I use it on other desktop environments, like KDE or XFCE?](#can-i-use-it-on-other-desktop-environments-like-kde-or-xfce)
+- [Can I use it on other Editions/Atomic Desktops/Spins/Labs?](#can-i-use-it-on-other-version)
 - [Does the script support TPM decryption?](#does-the-script-support-tpm-decryption)
 - [How can I report bugs or suggest improvements?](#how-can-i-report-bugs-or-suggest-improvements)
 - [What license is the script under?](#what-license-is-the-script-under)
@@ -55,11 +55,10 @@ The script is intended for the **latest version of Fedora Workstation** **(Fedor
 
 ---
 
-## <a id="can-i-use-it-on-other-desktop-environments-like-kde-or-xfce"></a> :warning: Can I use it on other desktop environments, like KDE or XFCE?
+## <a id="can-i-use-it-on-other-version"></a> :warning: Can I use it on other Editions/Atomic Desktops/Spins/Labs?
 
-The script is **only tested on GNOME** and installs components specific to GNOME.  
-For example, on KDE, the autostart terminal window does not appear correctly.  
-Other desktop environments are **not supported or tested**, but I intend to test them in the future.
+The script is **only tested on GNOME and KDE Editions**.  
+Other Editions/Atomic Desktops/Spins/Labs are **not supported or tested**.
 
 ---
 
