@@ -140,7 +140,7 @@ dnf-manager "install" "decibels gnome-music"
 dnf-manager "install" "gnome-shell-extension-appindicator"
 
 # Replace RPMs with Flatpaks
-dnf-manager "remove" "mediawriter gnome-boxes @libreoffice firefox"
+dnf-manager "remove" "mediawriter gnome-boxes libreoffice-core @libreoffice firefox"
 rm -r $HOME/.mozilla
 flatpak-install "org.fedoraproject.MediaWriter org.gnome.Boxes org.libreoffice.LibreOffice org.mozilla.firefox"
 
