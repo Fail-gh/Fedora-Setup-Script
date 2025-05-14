@@ -157,9 +157,9 @@ fi
 # Remove RPMFusion setup from autostart
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
-	rm "$PWD/.config/autostart/gnome-setup.desktop"
+	rm "$HOME/.config/autostart/gnome-setup.desktop"
 else
-	rm "$PWD/.config/autostart/kde-setup.desktop"
+	rm "$HOME/.config/autostart/kde-setup.desktop"
 fi
 
 if [ -n "$nvidia" ]
@@ -176,9 +176,9 @@ fi
 
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
-	mv "$PWD/.config/autostart/gnome-tpm" "$PWD/.config/autostart/gnome-tpm.desktop"
+	mv "$HOME/.config/autostart/gnome-tpm" "$HOME/.config/autostart/gnome-tpm.desktop"
 else
-	mv "$PWD/.config/autostart/kde-tpm.bak" "$PWD/.config/autostart/kde-tpm.desktop"
+	mv "$HOME/.config/autostart/kde-tpm.bak" "$HOME/.config/autostart/kde-tpm.desktop"
 fi
 
 # Final reboot
