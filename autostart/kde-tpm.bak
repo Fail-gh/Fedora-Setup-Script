@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=User Configuration
+Type=Application
+Exec=konsole -e "HOME/tpm.sh"
+Path=HOME
+Terminal=true

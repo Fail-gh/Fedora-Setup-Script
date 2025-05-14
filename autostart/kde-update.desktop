@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Start Fedora setup script
+Type=Application
+Exec=konsole -e "HOME/update.sh"
+Path=HOME
+Terminal=true

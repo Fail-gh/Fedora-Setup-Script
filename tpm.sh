@@ -1,7 +1,10 @@
 #!/bin/bash
 
-# Enable AppIndicator and KStatusNotifierItem Support
-gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	# Enable AppIndicator and KStatusNotifierItem Support
+	gnome-extensions enable appindicatorsupport@rgcjonas.gmail.com
+fi
 
 # Check if LUKS encrypted partitions and TPM are available
 luks=$(lsblk | grep luks)
@@ -56,4 +59,9 @@ else
 fi
 
 # Remove tpm configuration from autostart
-rm $HOME/.config/autostart/tpm.desktop
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	rm $HOME/.config/autostart/gnome-tpm.desktop
+else
+	rm $HOME/.config/autostart/kde-tpm.desktop
+fi

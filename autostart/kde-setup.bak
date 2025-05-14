@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=RPM Fusion
+Type=Application
+Exec=konsole -e "HOME/setup.sh"
+Path=HOME
+Terminal=true

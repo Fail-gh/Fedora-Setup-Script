@@ -132,20 +132,30 @@ dnf-manager "swap" "mesa-vdpau-drivers mesa-vdpau-drivers-freeworld"
 dnf-manager "swap" "mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686"
 dnf-manager "swap" "mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686"
 
-# Replace Rhythmbox with GNOME default apps
-dnf-manager "remove" "rhythmbox"
-dnf-manager "install" "decibels gnome-music"
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	# Replace Rhythmbox with GNOME default apps
+	dnf-manager "remove" "rhythmbox"
+	dnf-manager "install" "decibels gnome-music"
 
-# Install AppIndicator and KStatusNotifierItem Support
-dnf-manager "install" "gnome-shell-extension-appindicator"
+	# Install AppIndicator and KStatusNotifierItem Support
+	dnf-manager "install" "gnome-shell-extension-appindicator"
+
+	# Replace GNOME Boxes RPM with Flatpak
+	dnf-manager "remove" "gnome-boxes"
+	flatpak-install "org.gnome.Boxes"
+fi
 
 # Replace RPMs with Flatpaks
-dnf-manager "remove" "mediawriter gnome-boxes libreoffice-core @libreoffice firefox"
+dnf-manager "remove" "mediawriter libreoffice-core @libreoffice firefox"
 rm -r $HOME/.mozilla
-flatpak-install "org.fedoraproject.MediaWriter org.gnome.Boxes org.libreoffice.LibreOffice org.mozilla.firefox"
+flatpak-install "org.fedoraproject.MediaWriter org.libreoffice.LibreOffice org.mozilla.firefox"
 
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
 # Install Extension Manager, Flatseal and Gear Lever using Flatpak
 flatpak-install "com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal"
+fi
 
 # Clear dnf cache
 dnf clean all
@@ -153,14 +163,22 @@ echo
 sudo dnf clean all
 echo
 
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
 # Move Btrfs Assistant and SELinux Troubleshooter to "System" folder
 gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/System/ apps "['btrfs-assistant.desktop', 'org.gnome.baobab.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.freedesktop.MalcontentControl.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'setroubleshoot.desktop', 'org.gnome.SystemMonitor.desktop']"
 
 # Move Charachter to "Utilities" folder
 gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/Utilities/ apps "['org.gnome.Characters.desktop', 'org.gnome.Connections.desktop', 'org.gnome.Evince.desktop', 'org.gnome.font-viewer.desktop', 'org.gnome.Loupe.desktop']"
+fi
 
 # Remove RPMFusion setup from autostart
-rm "$PWD/.config/autostart/setup.desktop"
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	rm "$HOME/.config/autostart/gnome-setup.desktop"
+else
+	rm "$HOME/.config/autostart/kde-setup.desktop"
+fi
 
 if [ -n "$nvidia" ]
 then
@@ -174,7 +192,12 @@ then
 	done
 fi
 
-mv "$PWD/.config/autostart/tpm" "$PWD/.config/autostart/tpm.desktop"
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	mv "$HOME/.config/autostart/gnome-tpm" "$HOME/.config/autostart/gnome-tpm.desktop"
+else
+	mv "$HOME/.config/autostart/kde-tpm.bak" "$HOME/.config/autostart/kde-tpm.desktop"
+fi
 
 # Final reboot
 reboot
