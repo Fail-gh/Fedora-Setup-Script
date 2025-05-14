@@ -155,7 +155,12 @@ gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folder
 fi
 
 # Remove RPMFusion setup from autostart
-rm "$PWD/.config/autostart/setup.desktop"
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	rm "$PWD/.config/autostart/gnome-setup.desktop"
+else
+	rm "$PWD/.config/autostart/plasma-setup.desktop"
+fi
 
 if [ -n "$nvidia" ]
 then
@@ -169,7 +174,12 @@ then
 	done
 fi
 
-mv "$PWD/.config/autostart/tpm" "$PWD/.config/autostart/tpm.desktop"
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	mv "$PWD/.config/autostart/gnome-tpm" "$PWD/.config/autostart/gnome-tpm.desktop"
+else
+	mv "$PWD/.config/autostart/plasma-tpm" "$PWD/.config/autostart/plasma-tpm.desktop"
+fi
 
 # Final reboot
 reboot

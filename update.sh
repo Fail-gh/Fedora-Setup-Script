@@ -24,7 +24,12 @@ done
 mkdir -p "$HOME/.config/autostart"
 
 # Copy modified autostart files to the user's autostart directory
-cp ./autostart/* "$HOME/.config/autostart/"
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	cp ./autostart/gnome-* "$HOME/.config/autostart/"
+else
+	cp ./autostart/plasma-* "$HOME/.config/autostart/"
+fi
 
 # Grant execution permission to all necessary setup scripts
 chmod +x ./setup.sh
@@ -40,8 +45,14 @@ then
 	pkcon offline-trigger
 fi
 
-rm "$HOME/.config/autostart/update.desktop"
-mv "$HOME/.config/autostart/setup" "$HOME/.config/autostart/setup.desktop"
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	rm "$HOME/.config/autostart/gnome-update.desktop"
+	mv "$HOME/.config/autostart/gnome-setup" "$HOME/.config/autostart/gnome-setup.desktop"
+else
+	rm "$HOME/.config/autostart/plasma-update.desktop"
+	mv "$HOME/.config/autostart/plasma-setup" "$HOME/.config/autostart/gnome-setup.desktop"
+fi
 
 # Reboot the system
 reboot

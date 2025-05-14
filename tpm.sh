@@ -59,4 +59,9 @@ else
 fi
 
 # Remove tpm configuration from autostart
-rm $HOME/.config/autostart/tpm.desktop
+if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
+then
+	rm $HOME/.config/autostart/gnome-tpm.desktop
+else
+	rm $HOME/.config/autostart/plasma-tpm.desktop
+fi
