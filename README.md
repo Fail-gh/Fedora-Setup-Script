@@ -41,10 +41,11 @@ This script automates post-installation tasks on **Fedora Workstation**:
 - Install RPMFusion repositories
 - Install multimedia codecs [RPMFusion/Howto/Multimedia](https://rpmfusion.org/Howto/Multimedia?highlight=%28%5CbCategoryHowto%5Cb%29)
 - Install NVIDIA drivers if an NVIDIA gpu is detected
-- Replace Rhythmbox with GNOME default apps (Decibel and Music)
-- Install and enable AppIndicator and KStatusNotifierItem Support
-- Replace RPMs with Flatpaks for recommended apps (Fedora Media Writer, Boxes, Libreoffice, Firefox)
-- Install Extension Manager, Flatseal and Gear Lever using Flatpak
+- Install ROCm for AMD and intel-compute-runtime for Intel, with fallback to mesa-libOpenCL with unsupported hardware
+- **When on GNOME** replace Rhythmbox with GNOME default apps (Decibel and Music)
+- **When on GNOME** Install and enable AppIndicator and KStatusNotifierItem Support
+- Replace RPMs with Flatpaks for recommended apps (Fedora Media Writer, Boxes (**on GNOME**), LibreOffice, Firefox)
+- **When on GNOME** Install Extension Manager, Flatseal and Gear Lever using Flatpak
 - Configure TPM decryption (**The user will be prompted for it and can choose not to enable TPM decryption**)
 
 ---
