@@ -1,7 +1,7 @@
 #!/bin/bash
 
-pkcon-update () {
-	$1
+pkcon-manager () {
+	pkcon $1
 
 	while [[ $? -ne 0 && $? -ne 5 ]]
 	do
@@ -36,14 +36,11 @@ chmod +x ./setup.sh
 chmod +x ./tpm.sh
 
 #Update system
-pkcon-update "pkcon refresh force"
-pkcon-update "pkcon update --only-download"
+pkcon-manager "refresh force"
+pkcon-manager "update --only-download"
 
-# If the update was successful, trigger an offline update for the next reboot
-if [ $? -eq 0 ]
-then
-	pkcon offline-trigger
-fi
+# Trigger an offline update for the next reboot
+pkcon offline-trigger
 
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
