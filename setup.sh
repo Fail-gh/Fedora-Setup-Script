@@ -66,6 +66,9 @@ dnf-manager "install" "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-
 # Enable users to install packages using Gnome Software or similar (Only GUI packages)
 dnf-manager "upgrade" "@core"
 
+# Switch to full ffpmeg
+dnf-manager "swap" "--allowerasing" "ffmpeg-free ffmpeg"
+
 # Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
 dnf-manager "upgrade" "--setopt=install_weak_deps=False" "--exclude=PackageKit-gstreamer-plugin" "@multimedia"
 
@@ -122,9 +125,6 @@ then
 		dnf-manager "install" "mesa-libOpenCL"
 	fi
 fi
-
-# Switch to full ffpmeg
-dnf-manager "swap" "--allowerasing" "ffmpeg-free ffmpeg"
 
 # Install mesa Hardware Accelerated Codec
 dnf-manager "swap" "mesa-va-drivers mesa-va-drivers-freeworld"
