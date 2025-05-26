@@ -142,7 +142,7 @@ then
 	dnf-manager "install" "gnome-shell-extension-appindicator"
 fi
 
-# Replace RPMs with Flatpaks
+# Replace LibreOffice RPM with Flatpak
 dnf-manager "remove" "libreoffice-core @libreoffice"
 flatpak-install "org.libreoffice.LibreOffice"
 
