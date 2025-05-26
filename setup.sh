@@ -140,16 +140,11 @@ then
 
 	# Install AppIndicator and KStatusNotifierItem Support
 	dnf-manager "install" "gnome-shell-extension-appindicator"
-
-	# Replace GNOME Boxes RPM with Flatpak
-	dnf-manager "remove" "gnome-boxes"
-	flatpak-install "org.gnome.Boxes"
 fi
 
-# Replace RPMs with Flatpaks
-dnf-manager "remove" "mediawriter libreoffice-core @libreoffice firefox"
-rm -r $HOME/.mozilla
-flatpak-install "org.fedoraproject.MediaWriter org.libreoffice.LibreOffice org.mozilla.firefox"
+# Replace LibreOffice RPM with Flatpak
+dnf-manager "remove" "libreoffice-core @libreoffice"
+flatpak-install "org.libreoffice.LibreOffice"
 
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
