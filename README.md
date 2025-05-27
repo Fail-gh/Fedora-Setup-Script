@@ -43,7 +43,7 @@ This script automates post-installation tasks on **Fedora Workstation**:
 - **When on GNOME** Install and enable (for current user) AppIndicator and KStatusNotifierItem Support
 - Replace LibreOffice RPM with Flatpak
 - **When on GNOME** Install Extension Manager using Flatpak
-- Configure TPM decryption (**The user will be prompted for it and can choose not to enable TPM decryption**)
+- Configure [TPM decryption](https://fedoramagazine.org/automatically-decrypt-your-disk-using-tpm2/) (**The user will be prompted for it and can choose not to enable TPM decryption**)
 
 ---
 
