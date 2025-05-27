@@ -38,25 +38,6 @@ echo
 sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-steam.repo"
 sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo"
 
-# Install BTRFS Assistant for GUI BTRFS management
-dnf-manager "install" "btrfs-assistant"
-
-# Auto BTRFS maintenance configuration
-sudo sed -i 's|BTRFS_BALANCE_MOUNTPOINTS="/"|BTRFS_BALANCE_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
-sudo sed -i 's|BTRFS_SCRUB_MOUNTPOINTS="/"|BTRFS_SCRUB_MOUNTPOINTS="/:/home"|g' "/etc/sysconfig/btrfsmaintenance"
-
-# Configure snapshot of root
-sudo snapper create-config /
-sudo snapper set-config NUMBER_LIMIT=5 TIMELINE_CREATE=no
-
-# Enable snapper timers
-sudo systemctl disable snapper-timeline.timer
-echo
-sudo systemctl enable --now snapper-boot.timer
-echo
-sudo systemctl enable snapper-cleanup.timer
-echo
-
 # Install SELinux Troubleshooter to analyze and resolve AVC denials
 dnf-manager "install" "setroubleshoot"
 
@@ -149,7 +130,7 @@ flatpak-install "org.libreoffice.LibreOffice"
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
 # Install Extension Manager, Flatseal and Gear Lever using Flatpak
-flatpak-install "com.mattjakeman.ExtensionManager it.mijorus.gearlever com.github.tchx84.Flatseal"
+flatpak-install "com.mattjakeman.ExtensionManager"
 fi
 
 # Clear dnf cache
@@ -160,8 +141,8 @@ echo
 
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
-# Move Btrfs Assistant and SELinux Troubleshooter to "System" folder
-gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/System/ apps "['btrfs-assistant.desktop', 'org.gnome.baobab.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.freedesktop.MalcontentControl.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'setroubleshoot.desktop', 'org.gnome.SystemMonitor.desktop']"
+# Move SELinux Troubleshooter to "System" folder
+gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/System/ apps "['org.gnome.baobab.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.freedesktop.MalcontentControl.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'setroubleshoot.desktop', 'org.gnome.SystemMonitor.desktop']"
 
 # Move Charachter to "Utilities" folder
 gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/Utilities/ apps "['org.gnome.Characters.desktop', 'org.gnome.Connections.desktop', 'org.gnome.Evince.desktop', 'org.gnome.font-viewer.desktop', 'org.gnome.Loupe.desktop']"
