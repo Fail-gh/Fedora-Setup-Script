@@ -16,14 +16,14 @@ dnf-manager () {
 }
 
 flatpak-install () {
-	flatpak install --noninteractive "$@"
+	flatpak install -y "$@"
 	local exit_code=$?
 
 	while [ $exit_code -ne 0 ]
 	do
 		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
-		flatpak install --noninteractive "$@"
+		flatpak install -y "$@"
 		exit_code=$?
 	done
 
