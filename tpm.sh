@@ -1,5 +1,20 @@
 #!/bin/bash
 
+dnf-manager () {
+	sudo dnf -y "$@"
+	local exit_code=$?
+
+	while [ $exit_code -ne 0 ]
+	do
+		echo -e "\nRetrying in 5 seconds...\n"
+		sleep 5
+		sudo dnf -y "$@"
+		exit_code=$?
+	done
+
+	echo
+}
+
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
 	# Enable AppIndicator and KStatusNotifierItem Support
@@ -15,34 +30,28 @@ then
 	if [ -n "$tpm" ]
 	then
 		PS3="-> "
-		echo "Enable tpm decryption? (Auto unlock of disk/s at boot, but is less secure)"
+		echo "Enable tpm decryption? (Auto unlock disk at boot, but is less secure)"
 		select tpmd in Yes No
 		do
 			case $tpmd in
 				Yes)
-					# List all LUKS encrypted devices
-					sudo blkid -t TYPE=crypto_LUKS | cut -d':' -f1 | cut -d'/' -f3 > crypted
-					max=$(wc -l < crypted)
+					# Install Clevis
+					dnf-manager install clevis clevis-luks clevis-dracut clevis-udisks2 clevis-systemd
 
-					# Enroll each partition with TPM
-					for ((n=1; n<=max; n++))
-					do
-						part=$(sed -n "${n}p" crypted)
-						sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=2+5+6 /dev/$part
-					done
+					# List LUKS encrypted device
+					uuid=$(sudo blkid | grep fedora | sed -n 's/.*luks-\([^ ]*\).*/\1/p' | cut -d':' -f1)
+					crypted=$(sudo blkid -t UUID=$uuid | cut -d':' -f1 | cut -d'/' -f3)
 
-					# Update /etc/crypttab for TPM decryption
-					sudo awk '{sub("none","-",$3);print}' /etc/crypttab > crypttab
-					sudo awk '{sub("discard","tpm2-device=auto,discard",$4);print}' crypttab > crypttab2
-					sudo cp crypttab2 /etc/crypttab
+					# Configure clevis
+					sudo clevis luks bind -d /dev/$crypted tpm2 '{"pcr_ids":"2,5,7"}'
 
-					# Clean up temporary files
-					rm crypted crypttab crypttab2
+					sudo mkdir /etc/systemd/system/systemd-ask-password-plymouth.service.d
+					echo "[Service]" | sudo tee /etc/systemd/system/systemd-ask-password-plymouth.service.d/override.conf > /dev/null
+					echo "ExecStartPre=/bin/sleep 10" | sudo tee -a /etc/systemd/system/systemd-ask-password-plymouth.service.d/override.conf > /dev/null
+					echo 'install_items+=" /etc/systemd/system/systemd-ask-password-plymouth.service.d/override.conf "' | sudo tee /etc/dracut.conf.d/systemd-ask-password-plymouth.conf > /dev/null
 
-					# Update grub and initramfs
-					echo "Please wait..."
-					sudo grubby --args="rd.luks.options=tpm2-device=auto" --update-kernel=ALL
-					sudo dracut -f
+					# Update initramfs
+					sudo dracut -fv --regenerate-all
 					break;;
 				No)
 					break;;
