@@ -1,20 +1,21 @@
 #!/bin/bash
 
 pkcon-manager () {
-	pkcon $1
+	pkcon "$@"
+	local exit_code=$?
 
-	while [[ $? -ne 0 && $? -ne 5 ]]
+	while [[ $exit_code -ne 0 && $exit_code -ne 5 ]]
 	do
 		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
-		pkcon $1
+		pkcon "$@"
+		exit_code=$?
 	done
 
 	echo
 }
 
-# Set current folder to autostart
-# Using "HOME" as a placeholder for replacement with the current working directory
+# Replace "HOME" placeholder in autostart files with current working directory
 for file in ./autostart/*
 do
 	sed -i "s|HOME|$PWD|g" "$file"
@@ -36,8 +37,8 @@ chmod +x ./setup.sh
 chmod +x ./tpm.sh
 
 #Update system
-pkcon-manager "refresh force"
-pkcon-manager "update --only-download"
+pkcon-manager refresh force
+pkcon-manager update --only-download
 
 # Trigger an offline update for the next reboot
 pkcon offline-trigger

@@ -1,13 +1,15 @@
 #!/bin/bash
 
 dnf-manager () {
-	sudo dnf $1 -y $2 $3 $4
+	sudo dnf -y "$@"
+	local exit_code=$?
 
-	while [ $? -ne 0 ]
+	while [ $exit_code -ne 0 ]
 	do
 		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
-		sudo dnf $1 -y $2 $3 $4
+		sudo dnf -y "$@"
+		exit_code=$?
 	done
 
 	echo
@@ -34,7 +36,7 @@ then
 			case $tpmd in
 				Yes)
 					# Install Clevis
-					dnf-manager "install" "clevis clevis-luks clevis-dracut clevis-udisks2 clevis-systemd"
+					dnf-manager install clevis clevis-luks clevis-dracut clevis-udisks2 clevis-systemd
 
 					# List LUKS encrypted device
 					uuid=$(sudo blkid | grep fedora | sed -n 's/.*luks-\([^ ]*\).*/\1/p' | cut -d':' -f1)
