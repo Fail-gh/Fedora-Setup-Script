@@ -141,8 +141,9 @@ echo
 
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
-# Move SELinux Troubleshooter to "System" folder
-gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/System/ apps "['org.gnome.baobab.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.freedesktop.MalcontentControl.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'setroubleshoot.desktop', 'org.gnome.SystemMonitor.desktop']"
+	# Move SELinux Troubleshooter to "System" folder
+	gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/System/ apps "['org.gnome.baobab.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.freedesktop.MalcontentControl.desktop', 'org.freedesktop.GnomeAbrt.desktop', 'setroubleshoot.desktop', 'org.gnome.SystemMonitor.desktop']"
+fi
 
 # Remove RPMFusion setup from autostart
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
