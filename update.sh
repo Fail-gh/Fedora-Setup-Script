@@ -7,7 +7,7 @@ pkcon-manager () {
 	do
 		echo -e "\nRetrying in 5 seconds...\n"
 		sleep 5
-		$1
+		pkcon $1
 	done
 
 	echo
