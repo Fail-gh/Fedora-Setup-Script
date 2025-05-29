@@ -43,7 +43,7 @@ then
 					crypted=$(sudo blkid -t UUID=$uuid | cut -d':' -f1 | cut -d'/' -f3)
 
 					# Configure clevis
-					sudo clevis luks bind -d /dev/$crypted tpm2 '{"pcr_ids":"2,5,7"}'
+					sudo clevis luks bind -d /dev/$crypted tpm2 '{"pcr_ids":"2,5"}'
 
 					sudo mkdir /etc/systemd/system/systemd-ask-password-plymouth.service.d
 					echo "[Service]" | sudo tee /etc/systemd/system/systemd-ask-password-plymouth.service.d/override.conf > /dev/null
