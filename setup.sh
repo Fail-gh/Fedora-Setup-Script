@@ -99,14 +99,15 @@ amd_gpu=$(lspci | grep VGA | grep AMD)
 
 if [ -n "$amd_gpu" ]
 then
-	dnf-manager install rocm-opencl rocm-hip rocm-core clinfo
+	dnf-manager install rocm-opencl rocm-hip rocm-clinfo
 
-	AMDOpenCL=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
-	if [ "$AMDOpenCL" -gt 0 ]
+	AMDOpenCL=$(rocm-clinfo 2>/dev/null | grep "Number of platforms" | awk '{print $NF}')
+ 	# Set default 0 if empty
+	AMDOpenCL=${AMDOpenCL:-0}
+
+	if ! [ "$AMDOpenCL" -gt 0 ]
 	then
-		dnf-manager remove clinfo
-	else
-		dnf-manager remove rocm-opencl rocm-hip rocm-core clinfo
+		dnf-manager remove rocm-opencl rocm-hip rocm-clinfo
 		dnf-manager install mesa-libOpenCL
 	fi
 fi
