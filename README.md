@@ -22,6 +22,7 @@ This replaces the newer driver with one that is compatible with older hardware, 
 - [What is this script for?](#what-is-this-script-for)
 - [Which Fedora versions are supported?](#which-fedora-versions-are-supported)
 - [Can I use it on other Editions/Atomic Desktops/Spins/Labs?](#can-i-use-it-on-other-version)
+- [Does it support NVIDIA GPUs older than the Turing generation?](#nvidia-older-than-turing)
 - [Does the script support TPM decryption?](#does-the-script-support-tpm-decryption)
 - [How can I report bugs or suggest improvements?](#how-can-i-report-bugs-or-suggest-improvements)
 - [What license is the script under?](#what-license-is-the-script-under)
@@ -39,9 +40,8 @@ This script automates post-installation tasks on **Fedora Workstation**:
 - Install multimedia codecs [RPMFusion/Howto/Multimedia](https://rpmfusion.org/Howto/Multimedia?highlight=%28%5CbCategoryHowto%5Cb%29)
 - Install NVIDIA drivers if an NVIDIA gpu is detected
 - Install ROCm for AMD and intel-compute-runtime for Intel, with fallback to mesa-libOpenCL with unsupported hardware
-- **When on GNOME** replace Rhythmbox with GNOME default apps (Decibel and Music)
+- **When on GNOME** replace Rhythmbox with Decibel
 - **When on GNOME** Install and enable (for current user) AppIndicator and KStatusNotifierItem Support
-- Replace LibreOffice RPM with Flatpak
 - **When on GNOME** Install Extension Manager using Flatpak
 - Configure [TPM decryption](https://fedoramagazine.org/automatically-decrypt-your-disk-using-tpm2/) (**The user will be prompted for it and can choose not to enable TPM decryption**)
 
@@ -57,6 +57,32 @@ The script is intended for the **latest version of Fedora Workstation** **(Fedor
 
 The script is **only tested on GNOME and KDE Editions**.  
 Other Editions/Atomic Desktops/Spins/Labs are **not supported or tested**.
+
+---
+
+## <a id="nvidia-older-than-turing"></a> :cd: Does it support NVIDIA GPUs older than the Turing generation?
+If your GPU is pre-Turing and supports the 580 driver, follow these steps:
+```bash
+	# 1. Disable the open kernel module
+	sudo sh -c 'echo "%_with_kmod_nvidia_open 0" > /etc/rpm/macros.nvidia-kmod'
+
+	# 2. Build the proprietary NVIDIA kernel module
+	sudo akmods --kernels $(uname -r) --rebuild
+
+	# 3. Wait for the build process to complete
+	reboot=$(systemd-inhibit | grep akmods)
+
+	while [ -n "$reboot" ]
+	do
+		sleep 1
+		reboot=$(systemd-inhibit | grep akmods)
+	done
+
+	# 4. Reboot the system
+	reboot
+```
+
+After reboot if secure boot is enabled, you’ll need to enroll the secure boot keys to allow the driver to load properly. On GNOME, a notification will appear guiding you through the process.
 
 ---
 

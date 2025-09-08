@@ -76,11 +76,10 @@ then
 	dnf-manager install akmod-nvidia xorg-x11-drv-nvidia-cuda libva-nvidia-driver.i686 libva-nvidia-driver.x86_64
 fi
 
-# Install compute runtime if intel gpu is detected
-intel_cpu=$(lscpu | grep Intel)
+# Install compute runtime if Intel gpu is detected
 intel_gpu=$(lspci | grep VGA | grep Intel)
 
-if [[ -n "$intel_cpu" || -n "$intel_gpu" ]]
+if [[ -n "$intel_gpu" ]]
 then
 	dnf-manager install intel-compute-runtime clinfo
 
@@ -122,20 +121,13 @@ if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
 	# Replace Rhythmbox with GNOME default apps
 	dnf-manager remove rhythmbox
-	dnf-manager install decibels gnome-music
+	dnf-manager install decibels
 
 	# Install AppIndicator and KStatusNotifierItem Support
 	dnf-manager install gnome-shell-extension-appindicator
-fi
 
-# Replace LibreOffice RPM with Flatpak
-dnf-manager remove libreoffice-core @libreoffice
-flatpak-install org.libreoffice.LibreOffice
-
-if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
-then
-# Install Extension Manager, Flatseal and Gear Lever using Flatpak
-flatpak-install com.mattjakeman.ExtensionManager
+	# Install Extension Manager, Flatseal and Gear Lever using Flatpak
+	flatpak-install com.mattjakeman.ExtensionManager
 fi
 
 # Clear dnf cache
@@ -160,7 +152,18 @@ fi
 
 if [ -n "$nvidia" ]
 then
-	# Wait for NVIDIA driver to load if present
+	# Wait for NVIDIA driver to load
+	reboot=$(systemd-inhibit | grep akmods)
+
+	while [ -n "$reboot" ]
+	do
+		sleep 1
+		reboot=$(systemd-inhibit | grep akmods)
+	done
+
+	sudo sh -c 'echo "%_with_kmod_nvidia_open 1" > /etc/rpm/macros.nvidia-kmod'
+	sudo akmods --kernels $(uname -r) --rebuild
+
 	reboot=$(systemd-inhibit | grep akmods)
 
 	while [ -n "$reboot" ]
