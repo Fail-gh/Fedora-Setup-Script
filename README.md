@@ -40,10 +40,9 @@ This script automates post-installation tasks on **Fedora Workstation**:
 - Install multimedia codecs [RPMFusion/Howto/Multimedia](https://rpmfusion.org/Howto/Multimedia?highlight=%28%5CbCategoryHowto%5Cb%29)
 - Install NVIDIA drivers if an NVIDIA gpu is detected
 - Install ROCm for AMD and intel-compute-runtime for Intel, with fallback to mesa-libOpenCL with unsupported hardware
-- **When on GNOME** replace Rhythmbox with Decibel
 - **When on GNOME** Install and enable (for current user) AppIndicator and KStatusNotifierItem Support
 - **When on GNOME** Install Extension Manager using Flatpak
-- Configure [TPM decryption](https://fedoramagazine.org/automatically-decrypt-your-disk-using-tpm2/) (**The user will be prompted for it and can choose not to enable TPM decryption**)
+- Configure [TPM decryption](https://fedoramagazine.org/use-systemd-cryptenroll-with-fido-u2f-or-tpm2-to-decrypt-your-disk/) (**The user will be prompted for it and can choose not to enable TPM decryption**)
 
 ---
 
