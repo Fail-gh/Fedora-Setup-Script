@@ -31,27 +31,21 @@ then
 	then
 		PS3="-> "
 		echo "Enable tpm decryption? (Auto unlock disk at boot, but is less secure)"
-		select tpmd in Yes No
+		select tpm_decryption in Yes No
 		do
-			case $tpmd in
+			case $tpm_decryption in
 				Yes)
-					# Install Clevis
-					dnf-manager install clevis clevis-luks clevis-dracut clevis-udisks2 clevis-systemd
+					# List all LUKS encrypted devices
+					encrypted_disk=$(sudo blkid -t TYPE=crypto_LUKS -o device)
 
-					# List LUKS encrypted device
-					uuid=$(sudo blkid | grep fedora | sed -n 's/.*luks-\([^ ]*\).*/\1/p' | cut -d':' -f1)
-					crypted=$(sudo blkid -t UUID=$uuid | cut -d':' -f1 | cut -d'/' -f3)
+					# Enroll each partition with TPM
+					for encrypted_partition in $encrypted_disk
+					do
+						sudo systemd-cryptenroll --tpm2-device auto --tpm2-pcrs "2+5" $encrypted_partition
+					done
 
-					# Configure clevis
-					sudo clevis luks bind -d /dev/$crypted tpm2 '{"pcr_ids":"2,5"}'
-
-					sudo mkdir /etc/systemd/system/systemd-ask-password-plymouth.service.d
-					echo "[Service]" | sudo tee /etc/systemd/system/systemd-ask-password-plymouth.service.d/override.conf > /dev/null
-					echo "ExecStartPre=/bin/sleep 10" | sudo tee -a /etc/systemd/system/systemd-ask-password-plymouth.service.d/override.conf > /dev/null
-					echo 'install_items+=" /etc/systemd/system/systemd-ask-password-plymouth.service.d/override.conf "' | sudo tee /etc/dracut.conf.d/systemd-ask-password-plymouth.conf > /dev/null
-
-					# Update initramfs
-					sudo dracut -fv --regenerate-all
+					# Update /etc/crypttab for TPM decryption
+					sudo sed -i 's/$/,tpm2-device=auto,tpm2-pcrs=2+5' /etc/crypttab
 					break;;
 				No)
 					break;;

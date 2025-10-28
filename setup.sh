@@ -48,6 +48,9 @@ dnf-manager install setroubleshoot
 # Add RPMFusion repositories
 dnf-manager install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
+# Enable openH264 repository
+sudo dnf config-manager setopt fedora-cisco-openh264.enabled=1
+
 # Enable users to install packages using Gnome Software or similar (Only GUI packages)
 dnf-manager upgrade @core
 
@@ -57,16 +60,12 @@ dnf-manager swap --allowerasing ffmpeg-free ffmpeg
 # Allows the application using the gstreamer framework and other multimedia software, to play others restricted codecs
 dnf-manager upgrade --setopt=install_weak_deps=False --exclude=PackageKit-gstreamer-plugin @multimedia
 
-# Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
-dnf-manager install intel-media-driver
-
 # Install RPMFusion Free Tainted repo
 dnf-manager install rpmfusion-free-release-tainted
 dnf-manager install libdvdcss
 
 # Install RPMFusion NonFree Tainted repo
 dnf-manager install rpmfusion-nonfree-release-tainted
-dnf-manager install --repo=rpmfusion-nonfree-tainted *-firmware
 
 # NVIDIA driver installation if NVIDIA hardware is detected
 nvidia=$(lspci | grep NVIDIA)
@@ -81,10 +80,13 @@ intel_gpu=$(lspci | grep VGA | grep Intel)
 
 if [[ -n "$intel_gpu" ]]
 then
+	# Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
+	dnf-manager install intel-media-driver
+
 	dnf-manager install intel-compute-runtime clinfo
 
-	IntelOpenCL=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
-	if [ "$IntelOpenCL" -gt 0 ]
+	intel_opencl=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
+	if [ "$intel_opencl" -gt 0 ]
 	then
 		dnf-manager remove clinfo
 	else
@@ -100,11 +102,11 @@ if [ -n "$amd_gpu" ]
 then
 	dnf-manager install rocm-opencl rocm-hip rocm-clinfo
 
-	AMDOpenCL=$(rocm-clinfo 2>/dev/null | grep "Number of platforms" | awk '{print $NF}')
+	amd_opencl=$(rocm-clinfo 2>/dev/null | grep "Number of platforms" | awk '{print $NF}')
  	# Set default 0 if empty
-	AMDOpenCL=${AMDOpenCL:-0}
+	amd_opencl=${amd_opencl:-0}
 
-	if ! [ "$AMDOpenCL" -gt 0 ]
+	if ! [ "$amd_opencl" -gt 0 ]
 	then
 		dnf-manager remove rocm-opencl rocm-hip rocm-clinfo
 		dnf-manager install mesa-libOpenCL
@@ -119,10 +121,6 @@ dnf-manager swap mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
 
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
-	# Replace Rhythmbox with GNOME default apps
-	dnf-manager remove rhythmbox
-	dnf-manager install decibels
-
 	# Install AppIndicator and KStatusNotifierItem Support
 	dnf-manager install gnome-shell-extension-appindicator
 
