@@ -106,8 +106,10 @@ then
  	# Set default 0 if empty
 	amd_opencl=${amd_opencl:-0}
 
-	if ! [ "$amd_opencl" -gt 0 ]
+	if [ "$amd_opencl" -gt 0 ]
 	then
+		dnf-manager remove rocm-clinfo
+	else
 		dnf-manager remove rocm-opencl rocm-hip rocm-clinfo
 		dnf-manager install mesa-libOpenCL
 	fi
