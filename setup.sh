@@ -86,10 +86,8 @@ then
 	dnf-manager install intel-compute-runtime clinfo
 
 	intel_opencl=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
-	if [ "$intel_opencl" -gt 0 ]
+	if [ ! "$intel_opencl" -gt 0 ]
 	then
-		dnf-manager remove clinfo
-	else
 		dnf-manager remove intel-compute-runtime clinfo
 		dnf-manager install mesa-libOpenCL
 	fi
@@ -100,17 +98,14 @@ amd_gpu=$(lspci | grep VGA | grep AMD)
 
 if [ -n "$amd_gpu" ]
 then
-	dnf-manager install rocm-opencl rocm-hip rocm-clinfo
+	dnf-manager install rocm-clinfo rocm-hip rocm-opencl
 
 	amd_opencl=$(rocm-clinfo 2>/dev/null | grep "Number of platforms" | awk '{print $NF}')
  	# Set default 0 if empty
 	amd_opencl=${amd_opencl:-0}
 
-	if [ "$amd_opencl" -gt 0 ]
-	then
-		dnf-manager remove rocm-clinfo
-	else
-		dnf-manager remove rocm-opencl rocm-hip rocm-clinfo
+	if [ ! "$amd_opencl" -gt 0 ]
+		dnf-manager remove rocm-clinfo rocm-hip rocm-opencl
 		dnf-manager install mesa-libOpenCL
 	fi
 fi
