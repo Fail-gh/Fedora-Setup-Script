@@ -52,7 +52,7 @@ dnf-manager install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-rel
 sudo dnf config-manager setopt fedora-cisco-openh264.enabled=1
 
 # Enable users to install packages using Gnome Software or similar (Only GUI packages)
-dnf-manager upgrade @core
+dnf-manager install rpmfusion-\*-appstream-data
 
 # Switch to full ffpmeg
 dnf-manager swap --allowerasing ffmpeg-free ffmpeg
@@ -117,9 +117,7 @@ fi
 
 # Install mesa Hardware Accelerated Codec
 dnf-manager swap mesa-va-drivers mesa-va-drivers-freeworld
-dnf-manager swap mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
 dnf-manager swap mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
-dnf-manager swap mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
 
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
