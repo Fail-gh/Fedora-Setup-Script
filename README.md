@@ -17,12 +17,23 @@ sudo dnf swap intel-media-driver libva-intel-driver -y
 ```
 This replaces the newer driver with one that is compatible with older hardware, enabling hardware acceleration for video playback.
 
+**Note**:  
+If your hardware does not support intel-compute-runtime (https://github.com/intel/compute-runtime#supported-platforms) or ROCm (https://fedoraproject.org/wiki/SIGs/HC#HW_Support), use mesa-libOpenCL instead:  
+For **Intel**:
+```bash
+sudo dnf swap intel-compute-runtime mesa-libOpenCL -y
+```
+For **AMD**:
+```bash
+sudo dnf remove rocm-hip rocm-opencl -y
+sudo dnf install mesa-libOpenCL -y
+```
+
 # :question: FAQ - Fedora Setup Script
 
 - [What is this script for?](#what-is-this-script-for)
 - [Which Fedora versions are supported?](#which-fedora-versions-are-supported)
 - [Can I use it on other Editions/Atomic Desktops/Spins/Labs?](#can-i-use-it-on-other-version)
-- [Does it support NVIDIA GPUs older than the Turing generation?](#nvidia-older-than-turing)
 - [Does the script support TPM decryption?](#does-the-script-support-tpm-decryption)
 - [How can I report bugs or suggest improvements?](#how-can-i-report-bugs-or-suggest-improvements)
 - [What license is the script under?](#what-license-is-the-script-under)
@@ -35,20 +46,18 @@ This script automates post-installation tasks on **Fedora Workstation**:
 
 - Update your system
 - Disable Fedora Flatpaks and redundant RPMFusion repositories
-- Install SELinux Troubleshooter
 - Install RPMFusion repositories
 - Install multimedia codecs [RPMFusion/Howto/Multimedia](https://rpmfusion.org/Howto/Multimedia?highlight=%28%5CbCategoryHowto%5Cb%29)
 - Install NVIDIA drivers if an NVIDIA gpu is detected
-- Install ROCm for AMD and intel-compute-runtime for Intel, with fallback to mesa-libOpenCL with unsupported hardware
+- Install ROCm for AMD and intel-compute-runtime for Intel if corresponding hardware is detected
 - **When on GNOME** Install and enable (for current user) AppIndicator and KStatusNotifierItem Support
 - **When on GNOME** Install Extension Manager using Flatpak
 - Configure [TPM decryption](https://fedoramagazine.org/use-systemd-cryptenroll-with-fido-u2f-or-tpm2-to-decrypt-your-disk/) (**The user will be prompted for it and can choose not to enable TPM decryption**)
-
 ---
 
 ## <a id="which-fedora-versions-are-supported"></a> :computer: Which Fedora versions are supported?
 
-The script is intended for the **latest version of Fedora Workstation** **(Fedora Linux 42)** using the **GNOME** desktop environment.
+The script is intended for the **latest editions of Fedora**.
 
 ---
 
@@ -56,32 +65,6 @@ The script is intended for the **latest version of Fedora Workstation** **(Fedor
 
 The script is **only tested on GNOME and KDE Editions**.  
 Other Editions/Atomic Desktops/Spins/Labs are **not supported or tested**.
-
----
-
-## <a id="nvidia-older-than-turing"></a> :cd: Does it support NVIDIA GPUs older than the Turing generation?
-If your GPU is pre-Turing and supports the 580 driver, follow these steps:
-```bash
-	# 1. Disable the open kernel module
-	sudo sh -c 'echo "%_with_kmod_nvidia_open 0" > /etc/rpm/macros.nvidia-kmod'
-
-	# 2. Build the proprietary NVIDIA kernel module
-	sudo akmods --kernels $(uname -r) --rebuild
-
-	# 3. Wait for the build process to complete
-	reboot=$(systemd-inhibit | grep akmods)
-
-	while [ -n "$reboot" ]
-	do
-		sleep 1
-		reboot=$(systemd-inhibit | grep akmods)
-	done
-
-	# 4. Reboot the system
-	reboot
-```
-
-After reboot if secure boot is enabled, you’ll need to enroll the secure boot keys to allow the driver to load properly. On GNOME, a notification will appear guiding you through the process.
 
 ---
 
