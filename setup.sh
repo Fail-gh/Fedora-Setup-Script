@@ -42,9 +42,6 @@ echo
 sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-steam.repo"
 sudo sed -i 's|enabled=1|enabled=0|g' "/etc/yum.repos.d/rpmfusion-nonfree-nvidia-driver.repo"
 
-# Install SELinux Troubleshooter to analyze and resolve AVC denials
-dnf-manager install setroubleshoot
-
 # Add RPMFusion repositories
 dnf-manager install https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
@@ -75,7 +72,6 @@ then
 	dnf-manager install akmod-nvidia xorg-x11-drv-nvidia-cuda libva-nvidia-driver.i686 libva-nvidia-driver.x86_64
 fi
 
-# Install compute runtime if Intel gpu is detected
 intel_gpu=$(lspci | grep VGA | grep Intel)
 
 if [[ -n "$intel_gpu" ]]
@@ -83,36 +79,21 @@ then
 	# Install Hardware Accelerated Codec for Intel (Use libva-intel-driver for Haswell, 4 gen, 2013 or older)
 	dnf-manager install intel-media-driver
 
-	dnf-manager install intel-compute-runtime clinfo
-
-	intel_opencl=$(clinfo | grep "Number of platforms" | awk '{print $NF}')
-	if [ ! "$intel_opencl" -gt 0 ]
-	then
-		dnf-manager remove intel-compute-runtime clinfo
-		dnf-manager install mesa-libOpenCL
-	fi
+	# Install Intel runtime for oneAPI Level Zero and OpenCL (Use mesa-libOpenCL if your hardware is not supported: https://github.com/intel/compute-runtime#supported-platforms)
+	dnf-manager install intel-compute-runtime
 fi
 
-# Install ROCm runtime if AMD gpu is detected
 amd_gpu=$(lspci | grep VGA | grep AMD)
 
 if [ -n "$amd_gpu" ]
 then
-	dnf-manager install rocm-clinfo rocm-hip rocm-opencl
+	# Install mesa Hardware Accelerated Codec
+	dnf-manager install mesa-va-drivers-freeworld
+	dnf-manager install mesa-va-drivers-freeworld.i686
 
-	amd_opencl=$(rocm-clinfo 2>/dev/null | grep "Number of platforms" | awk '{print $NF}')
- 	# Set default 0 if empty
-	amd_opencl=${amd_opencl:-0}
-
-	if [ ! "$amd_opencl" -gt 0 ]
-		dnf-manager remove rocm-clinfo rocm-hip rocm-opencl
-		dnf-manager install mesa-libOpenCL
-	fi
+	# Install ROCm runtime (Use mesa-libOpenCL if your hardware is not supported: https://fedoraproject.org/wiki/SIGs/HC#HW_Support)
+	dnf-manager install rocm-hip rocm-opencl
 fi
-
-# Install mesa Hardware Accelerated Codec
-dnf-manager swap mesa-va-drivers mesa-va-drivers-freeworld
-dnf-manager swap mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
 
 if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
 then
@@ -121,18 +102,6 @@ then
 
 	# Install Extension Manager, Flatseal and Gear Lever using Flatpak
 	flatpak-install com.mattjakeman.ExtensionManager
-fi
-
-# Clear dnf cache
-dnf clean all
-echo
-sudo dnf clean all
-echo
-
-if [ "$XDG_SESSION_DESKTOP" == "gnome" ]
-then
-	# Move SELinux Troubleshooter to "System" folder
-	gsettings set org.gnome.desktop.app-folders.folder:/org/gnome/desktop/app-folders/folders/System/ apps "['org.gnome.baobab.desktop', 'org.gnome.DiskUtility.desktop', 'org.gnome.Logs.desktop', 'org.freedesktop.MalcontentControl.desktop', 'setroubleshoot.desktop', 'org.gnome.SystemMonitor.desktop']"
 fi
 
 # Remove RPMFusion setup from autostart
@@ -146,17 +115,6 @@ fi
 if [ -n "$nvidia" ]
 then
 	# Wait for NVIDIA driver to load
-	reboot=$(systemd-inhibit | grep akmods)
-
-	while [ -n "$reboot" ]
-	do
-		sleep 1
-		reboot=$(systemd-inhibit | grep akmods)
-	done
-
-	sudo sh -c 'echo "%_with_kmod_nvidia_open 1" > /etc/rpm/macros.nvidia-kmod'
-	sudo akmods --kernels $(uname -r) --rebuild
-
 	reboot=$(systemd-inhibit | grep akmods)
 
 	while [ -n "$reboot" ]
